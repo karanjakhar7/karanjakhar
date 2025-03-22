@@ -156,6 +156,10 @@ def gh_pages(c):
     # Build the production version of the site
     preview(c)
 
+    # Copy CNAME file to output directory if it exists
+    if os.path.exists("CNAME"):
+        shutil.copy2("CNAME", os.path.join(CONFIG["deploy_path"], "CNAME"))
+
     # Check if git is initialized and on correct branch
     if not os.path.isdir(".git"):
         c.run("git init")
