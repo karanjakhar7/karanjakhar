@@ -28,3 +28,10 @@ DEFAULT_PAGINATION = False
 
 # Uncomment following line if you want document-relative URLs when developing
 # RELATIVE_URLS = True
+
+# Sort articles by newest first in indexes
+NEWEST_FIRST_ARCHIVES = True
+
+# Also add these settings for consistent sorting across all pages
+ARTICLE_ORDER_BY = "reversed-date"
+INDEX_ORDER_BY = "reversed-date"

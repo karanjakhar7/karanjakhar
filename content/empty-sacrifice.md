@@ -1,5 +1,5 @@
 Title: The Illusion of Empty Sacrifices: Stop Mimicking Idols the Wrong Way
-Date: 2023-08-21 00:19:32
+Date: 2025-01-13 00:19:32
 Category: Blog
 
 

@@ -160,17 +160,37 @@ def gh_pages(c):
     if not os.path.isdir(".git"):
         c.run("git init")
         c.run(f"git checkout -b {CONFIG['source_branch']}")
+        # Add remote if not already added
+        c.run(
+            "git remote add origin https://github.com/karanjakhar7/karanjakhar7.github.io.git",
+            warn=True,
+        )
 
-    # Import and push to gh-pages branch
-    c.run(
-        "ghp-import -b {github_pages_branch} "
-        "-m {commit_message} "
-        "--no-jekyll "
-        "{deploy_path} -p".format(**CONFIG)
-    )
+    # Make sure we're on the source branch
+    c.run(f"git checkout {CONFIG['source_branch']}", warn=True)
 
-    print("Published to GitHub Pages!")
-    print("Note: It may take a few minutes for changes to appear online.")
+    try:
+        # Import and push to gh-pages branch
+        c.run(
+            "ghp-import -b {github_pages_branch} "
+            "-m {commit_message} "
+            "--no-jekyll "
+            "{deploy_path}".format(**CONFIG)
+        )
+
+        # Push the gh-pages branch
+        c.run(f"git push origin {CONFIG['github_pages_branch']} --force")
+
+        print("Published to GitHub Pages!")
+        print("Note: It may take a few minutes for changes to appear online.")
+    except Exception as e:
+        print(f"Error during publishing: {str(e)}")
+        print("\nTroubleshooting steps:")
+        print("1. Ensure you have proper GitHub authentication set up")
+        print("2. Check if you have write access to the repository")
+        print("3. Verify your repository URL is correct")
+        print("4. Make sure you're connected to the internet")
+        sys.exit(1)
 
 
 def pelican_run(cmd):

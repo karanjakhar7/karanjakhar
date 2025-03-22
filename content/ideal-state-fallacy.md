@@ -1,5 +1,5 @@
 Title: Ideal state fallacy
-Date: 2024-03-11 10:20
+Date: 2024-02-11 10:20
 Category: Blog
 
 The ideal time to take an action never arrives. The utopian state is unachievable. We are never fully prepared. But that’s okay.  
