@@ -159,6 +159,7 @@ def gh_pages(c):
     # Copy CNAME file to output directory if it exists
     if os.path.exists("CNAME"):
         shutil.copy2("CNAME", os.path.join(CONFIG["deploy_path"], "CNAME"))
+        print("Copied CNAME file to output directory")
 
     # Check if git is initialized and on correct branch
     if not os.path.isdir(".git"):
@@ -179,7 +180,8 @@ def gh_pages(c):
             "ghp-import -b {github_pages_branch} "
             "-m {commit_message} "
             "--no-jekyll "
-            "{deploy_path}".format(**CONFIG)
+            "--cname {cname} "
+            "{deploy_path}".format(**{**CONFIG, "cname": "karanjakhar.net"})
         )
 
         # Push the gh-pages branch

@@ -35,3 +35,8 @@ NEWEST_FIRST_ARCHIVES = True
 # Also add these settings for consistent sorting across all pages
 ARTICLE_ORDER_BY = "reversed-date"
 INDEX_ORDER_BY = "reversed-date"
+
+# Add custom CSS to hide footer credits
+CUSTOM_CSS = "custom.css"
+STATIC_PATHS = ["images", "extra/custom.css"]
+EXTRA_PATH_METADATA = {"extra/custom.css": {"path": "custom.css"}}
