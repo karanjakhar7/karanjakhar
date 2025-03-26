@@ -167,7 +167,7 @@ def gh_pages(c):
         c.run(f"git checkout -b {CONFIG['source_branch']}")
         # Add remote if not already added
         c.run(
-            "git remote add origin https://github.com/karanjakhar7/karanjakhar7.github.io.git",
+            "git remote add origin https://github.com/karanjakhar7/karanjakhar.git",
             warn=True,
         )
 
