@@ -9,3 +9,26 @@ dependencies = [
     "invoke>=2.2.0",
     "pelican[markdown]>=4.11.0",
 ]
+
+[tool.uv]
+package = false
+
+[tool.ruff]
+
+# Exclude files
+extend-exclude = [
+    ".ipynb_checkpoints",
+    ".vscode",
+    "__pycache__",
+    "build",
+    "*.ipynb"
+]
+
+line-length = 100
+
+[tool.ruff.format]
+quote-style = "double"
+docstring-code-format = true
+
+[tool.ruff.lint]
+select = ["I"]

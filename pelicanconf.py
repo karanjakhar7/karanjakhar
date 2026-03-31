@@ -44,10 +44,10 @@ STATIC_PATHS = ["images", "extra/custom.css"]
 EXTRA_PATH_METADATA = {"extra/custom.css": {"path": "custom.css"}}
 
 # Theme settings
-THEME = "pelican-fh5co-marble"
+THEME = "themes/pelican-fh5co-marble"
 
 # Plugin configuration
-PLUGIN_PATHS = ["/Users/karan/pelican-plugins"]
+PLUGIN_PATHS = ["plugins"]
 PLUGINS = ["i18n_subsites"]
 JINJA_ENVIRONMENT = {"extensions": ["jinja2.ext.i18n"]}
 I18N_TEMPLATES_LANG = "en"
@@ -83,8 +83,8 @@ HERO = [
 ABOUT = {
     "image": "/images/about/about.jpg",
     "mail": "",
-    "text": "An Engineer passionate about technology and philosophy.",
-    "link": "contact.html",
+    "text": "I am an engineer working at the intersection of AI systems and real-world applications. This blog is a space for thinking out loud—about technology, systems, and ideas.",
+    "link": "/pages/about.html",
     "address": "India",
     "phone": "",
 }

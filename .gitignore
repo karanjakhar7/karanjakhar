@@ -10,3 +10,8 @@ wheels/
 
 # Virtual environments
 .venv
+
+# Local Pelican dependencies and build output
+output/
+plugins/
+themes/
