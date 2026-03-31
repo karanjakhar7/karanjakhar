@@ -1,10 +1,10 @@
 /* General overwrides */
 h2, h3, h4, h5, h6 {
-  font-weight: 200;
+  font-weight: 300;
 }
 
 h2 {
-    font: 200 26px/1.7 Roboto, sans-serif;
+    font: 300 26px/1.7 Roboto, sans-serif;
     text-transform: uppercase;
     letter-spacing: 2px;
 }
@@ -18,6 +18,10 @@ h3, h4, h5, h6 {
 
 .archive h2 {
     margin-bottom: 4px;
+}
+
+#fh5co-hero .flexslider .flex-control-nav {
+    bottom: 60px;
 }
 
 /* about */
@@ -67,7 +71,7 @@ h3, h4, h5, h6 {
 
 /* search and form */
 .search-field {
-    width: 230px;
+    width: 205px;
     background: white;
 
 }
@@ -139,16 +143,26 @@ h3, h4, h5, h6 {
 
 .page-content .container, .article-content .container {
   width: auto !important;
-  padding-left: 0px;
-  padding-right: 0px;
-  padding-bottom: 15px;
+
+}
+
+.responsive-image {
+  padding: 0;
+}
+
+.responsive-image img {
+  max-width: 100%;
 }
 
 .container.float-left {
   float: left;
+  padding-left: 0px;
+  padding-bottom: 15px;
   padding-right: 15px;
 }
 .container.float-right {
   float: right;
+  padding-right: 0px;
+  padding-bottom: 15px;
   padding-left: 15px;
 }
