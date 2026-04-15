@@ -55,4 +55,12 @@ uv run python build.py --serve
 
 ### Deployment
 
-GitHub Actions builds the site on pushes to the `custom-ssg` branch and publishes the generated `output/` directory to `gh-pages`. The root `CNAME` file remains the source of truth for the custom domain and is copied into the build output during generation.
+GitHub Actions runs the regular build check on pushes and PRs, but production deployment now happens only when you push a `deploy-*` tag. The root `CNAME` file remains the source of truth for the custom domain and is copied into the build output during generation.
+
+Trigger a deployment with one command:
+
+```bash
+./scripts/deploy.sh
+```
+
+The script creates a unique deploy tag for the current `HEAD` and pushes both your current branch and the tag to `origin`.

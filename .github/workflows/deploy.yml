@@ -2,8 +2,8 @@ name: Build and Deploy
 
 on:
   push:
-    branches:
-      - custom-ssg
+    tags:
+      - "deploy-*"
   workflow_dispatch:
 
 permissions:
@@ -12,6 +12,9 @@ permissions:
 jobs:
   deploy:
     runs-on: ubuntu-latest
+    concurrency:
+      group: github-pages-deploy
+      cancel-in-progress: false
 
     steps:
       - name: Checkout
