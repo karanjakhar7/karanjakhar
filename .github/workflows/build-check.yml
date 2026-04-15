@@ -1,0 +1,29 @@
+name: Build Check
+
+on:
+  push:
+    branches:
+      - custom-ssg
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Set up uv
+        uses: astral-sh/setup-uv@v5
+
+      - name: Sync dependencies
+        run: uv sync --frozen
+
+      - name: Build site
+        run: uv run python build.py --clean

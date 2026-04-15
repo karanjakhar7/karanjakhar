@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <article class="section article-shell">
+    <div class="container narrow">
+      <p class="section-label"><a class="text-link" href="/blog/">Back to blog</a></p>
+      <header class="article-header">
+        <h1>{{ post.title }}</h1>
+        <p class="post-meta">{{ post.date_display }} · {{ post.reading_time }} min read</p>
+        {% if post.tags %}
+          <p class="tag-row">
+            {% for tag in post.tags %}
+              <span class="tag">{{ tag }}</span>
+            {% endfor %}
+          </p>
+        {% endif %}
+      </header>
+      <div class="article-body">{{ post.html_body | safe }}</div>
+    </div>
+  </article>
+{% endblock %}

@@ -1,0 +1,26 @@
+site:
+  title: "karanjakhar.net"
+  author: "Karan Jakhar"
+  description: "I am an engineer working at the intersection of AI systems and real-world applications."
+  base_url: "https://karanjakhar.net"
+  language: "en"
+  timezone: "Asia/Kolkata"
+
+theme: "minimal"
+
+hero:
+  image: "/assets/hero/background.jpg"
+  title: "Karan Jakhar"
+  text: "You have power over your mind - not outside events. Realize this, and you will find strength."
+
+about:
+  image: "/assets/about/about.jpg"
+  text: "I am an engineer working at the intersection of AI systems and real-world applications. This blog is a space for thinking out loud - about technology, systems, and ideas."
+  link: "/about/"
+
+social:
+  github: "https://www.github.com/karanjakhar7"
+  linkedin: "https://www.linkedin.com/in/karanjakhar7"
+
+build:
+  output_dir: "output"

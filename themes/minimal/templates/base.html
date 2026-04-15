@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="{{ site.language }}">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{{ page_title }}</title>
+  <meta name="description" content="{{ page_description }}">
+  <link rel="canonical" href="{{ canonical_url }}">
+  <meta property="og:title" content="{{ og_title }}">
+  <meta property="og:description" content="{{ og_description }}">
+  <meta property="og:url" content="{{ og_url }}">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="{{ site.title }}">
+  <link rel="alternate" type="application/rss+xml" title="{{ site.title }} Feed" href="/feed.xml">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/pygments.css">
+</head>
+<body class="{{ body_class }}">
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container">
+        <div class="brand-lockup">
+          <a class="brand" href="/">{{ site.title }}</a>
+          <p class="brand-note">{{ site.description }}</p>
+        </div>
+        <nav class="site-nav" aria-label="Primary">
+          {% for item in navigation %}
+            <a href="{{ item.url }}" {% if active_url == item.url %}aria-current="page"{% endif %}>{{ item.title }}</a>
+          {% endfor %}
+        </nav>
+      </div>
+    </header>
+
+    <main>
+      {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <p class="footer-title">{{ site.author }}</p>
+          <p class="footer-copy">Writing about technology, systems, and ideas.</p>
+        </div>
+        <div class="footer-links">
+          <a href="{{ social.github }}" rel="noreferrer">GitHub</a>
+          <a href="{{ social.linkedin }}" rel="noreferrer">LinkedIn</a>
+          <a href="/feed.xml">RSS</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <p>&copy; {{ current_year }} {{ site.author }}</p>
+      </div>
+    </footer>
+  </div>
+</body>
+</html>
