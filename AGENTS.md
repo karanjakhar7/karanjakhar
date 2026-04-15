@@ -24,6 +24,20 @@
 - `uv run python build.py --drafts`: include draft content.
 - `uv run python build.py --serve`: build and serve locally on port `8000`.
 
+## Deployment
+
+- Production deployment is handled by GitHub Actions in `.github/workflows/deploy.yml`.
+- Deploys run only on `workflow_dispatch` or when a `deploy-*` tag is pushed.
+- The workflow syncs dependencies with `uv sync --frozen`, builds with `uv run python build.py --clean`, and publishes `output/` to the `gh-pages` branch.
+- The simplest deployment path is `./scripts/deploy.sh`.
+- `./scripts/deploy.sh` requires a clean git worktree, creates a unique `deploy-<timestamp>-<sha>` tag from the current `HEAD`, and pushes both the current branch and the deploy tag to `origin`.
+- Manual deploy flow, if needed:
+  1. Commit the changes you want to publish.
+  2. Run `uv run python build.py --clean` locally if you want to sanity-check the build before deploying.
+  3. Create a tag matching `deploy-*`.
+  4. Push your branch and the tag to `origin`.
+  5. Wait for the GitHub Actions deploy workflow to publish the generated site to `gh-pages`.
+
 ## Content Conventions
 
 - Blog posts use canonical URLs at `/blog/{slug}/`.
