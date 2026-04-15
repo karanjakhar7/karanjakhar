@@ -25,7 +25,11 @@
         </div>
         <nav class="site-nav" aria-label="Primary">
           {% for item in navigation %}
-            <a href="{{ item.url }}" {% if active_url == item.url %}aria-current="page"{% endif %}>{{ item.title }}</a>
+            <a
+              href="{{ item.url }}"
+              {% if item.external %}target="_blank" rel="noreferrer"{% endif %}
+              {% if active_url == item.url %}aria-current="page"{% endif %}
+            >{{ item.title }}</a>
           {% endfor %}
         </nav>
       </div>
@@ -44,6 +48,12 @@
         <div class="footer-links">
           <a href="{{ social.github }}" rel="noreferrer">GitHub</a>
           <a href="{{ social.linkedin }}" rel="noreferrer">LinkedIn</a>
+          {% if resume.url %}
+            <a href="{{ resume.url }}" rel="noreferrer" target="_blank">Resume</a>
+          {% endif %}
+          {% if contact.email %}
+            <a href="mailto:{{ contact.email }}">Email</a>
+          {% endif %}
           <a href="/feed.xml">RSS</a>
         </div>
       </div>

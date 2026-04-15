@@ -9,19 +9,21 @@
         <p class="hero-text">{{ hero.text }}</p>
         <div class="hero-actions">
           <a class="button button-primary" href="/blog/">Read the blog</a>
-          <a class="button button-secondary" href="{{ about.link }}">About me</a>
+          <a class="button button-secondary" href="/#about">About me</a>
+          {% if resume.url %}
+            <a class="button button-secondary" href="{{ resume.url }}" rel="noreferrer" target="_blank">Resume</a>
+          {% endif %}
         </div>
       </div>
     </div>
   </section>
 
-  <section class="section">
+  <section class="section home-section-anchor" id="about">
     <div class="container about-grid">
       <div class="about-copy">
         <p class="section-label">About</p>
         <h2>Thinking from first principles, then shipping what works.</h2>
-        <p>{{ about.text }}</p>
-        <a class="text-link" href="{{ about.link }}">Read more</a>
+        <div class="section-richtext">{{ about_page.html_body | safe }}</div>
       </div>
       <div class="about-photo-wrap">
         <img class="about-photo" src="{{ about.image }}" alt="Portrait of {{ site.author }}">
@@ -47,6 +49,26 @@
             <a class="text-link" href="{{ post.url }}">Read essay</a>
           </article>
         {% endfor %}
+      </div>
+    </div>
+  </section>
+
+  <section class="section home-section-anchor" id="contact">
+    <div class="container">
+      <div class="contact-panel">
+        <div class="contact-copy">
+          <p class="section-label">Contact</p>
+          <h2>Open to thoughtful conversations and meaningful work.</h2>
+          <div class="section-richtext">{{ contact_page.html_body | safe }}</div>
+        </div>
+        <div class="contact-actions">
+          {% if contact.email %}
+            <a class="button button-primary" href="mailto:{{ contact.email }}">Email me</a>
+          {% endif %}
+          {% if social.linkedin %}
+            <a class="button button-secondary button-secondary-light" href="{{ social.linkedin }}" rel="noreferrer" target="_blank">LinkedIn</a>
+          {% endif %}
+        </div>
       </div>
     </div>
   </section>

@@ -16,11 +16,19 @@ hero:
 about:
   image: "/assets/about/about.jpg"
   text: "I am an engineer working at the intersection of AI systems and real-world applications. This blog is a space for thinking out loud - about technology, systems, and ideas."
-  link: "/about/"
+  link: "/#about"
 
 social:
   github: "https://www.github.com/karanjakhar7"
   linkedin: "https://www.linkedin.com/in/karanjakhar7"
+
+resume:
+  url: "https://drive.google.com/file/d/1EDjSG6SEiiEMxD2tzfccsq63tOH-bI36/view?usp=sharing"
+
+contact:
+  email: "kjakhar4321@gmail.com"
+
+nav_links: []
 
 build:
   output_dir: "output"

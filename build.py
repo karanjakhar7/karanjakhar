@@ -41,6 +41,10 @@ REDIRECT_TEMPLATE = """<!doctype html>
 </body>
 </html>
 """
+SECTION_PAGE_TARGETS = {
+    "about": "/#about",
+    "contact": "/#contact",
+}
 
 
 @dataclass
@@ -94,6 +98,32 @@ def load_config() -> dict[str, Any]:
         raise ValueError("Missing required build config value: build.output_dir")
 
     return config
+
+
+def normalize_link_items(items: Any) -> list[dict[str, str]]:
+    if not items:
+        return []
+    if not isinstance(items, list):
+        raise ValueError("Navigation links must be a list of mappings.")
+
+    normalized: list[dict[str, str]] = []
+    for item in items:
+        if not isinstance(item, dict):
+            raise ValueError(f"Invalid navigation link: {item!r}")
+        title = str(item.get("title", "")).strip()
+        url = str(item.get("url", "")).strip()
+        if not title and not url:
+            continue
+        if not title or not url:
+            raise ValueError(f"Navigation links require title and url: {item!r}")
+        normalized.append(
+            {
+                "title": title,
+                "url": url,
+                "external": bool(item.get("external", url.startswith(("http://", "https://", "mailto:")))),
+            }
+        )
+    return normalized
 
 
 def parse_frontmatter(text: str, source_path: Path) -> tuple[dict[str, Any], str]:
@@ -242,14 +272,22 @@ def load_content(directory: Path, content_type: str, include_drafts: bool) -> li
     return items
 
 
-def build_navigation(pages: list[ContentItem]) -> list[dict[str, Any]]:
-    nav_pages = [page for page in pages if getattr(page, "show_in_nav", False)]
+def build_navigation(pages: list[ContentItem], config: dict[str, Any]) -> list[dict[str, Any]]:
+    nav_pages = [
+        page for page in pages if getattr(page, "show_in_nav", False) and page.slug not in SECTION_PAGE_TARGETS
+    ]
     nav_pages.sort(key=lambda page: (getattr(page, "nav_order", 9999), page.title.lower()))
     navigation = [
-        {"title": "Home", "url": "/"},
-        {"title": "Blog", "url": "/blog/"},
+        {"title": "Home", "url": "/", "external": False},
+        {"title": "About", "url": SECTION_PAGE_TARGETS["about"], "external": False},
+        {"title": "Contact", "url": SECTION_PAGE_TARGETS["contact"], "external": False},
+        {"title": "Blog", "url": "/blog/", "external": False},
     ]
-    navigation.extend({"title": page.title, "url": page.url} for page in nav_pages)
+    navigation.extend({"title": page.title, "url": page.url, "external": False} for page in nav_pages)
+    resume_url = str(config.get("resume", {}).get("url", "")).strip()
+    if resume_url:
+        navigation.append({"title": "Resume", "url": resume_url, "external": True})
+    navigation.extend(normalize_link_items(config.get("nav_links")))
     return navigation
 
 
@@ -367,13 +405,26 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         lstrip_blocks=True,
     )
 
-    navigation = build_navigation(pages)
+    contact = config.get("contact", {})
+    resume = config.get("resume", {})
+    navigation = build_navigation(pages, config)
+    pages_by_slug = {page.slug: page for page in pages}
+    about_page = pages_by_slug.get("about")
+    contact_page = pages_by_slug.get("contact")
+    if about_page is None or contact_page is None:
+        raise ValueError("Both content/pages/about.md and content/pages/contact.md are required.")
+    section_pages = [page for page in pages if page.slug in SECTION_PAGE_TARGETS]
+    rendered_pages = [page for page in pages if page.slug not in SECTION_PAGE_TARGETS]
     tags = build_tag_map(posts)
     global_context = {
         "site": config["site"],
         "social": config["social"],
         "hero": config["hero"],
         "about": config["about"],
+        "contact": contact,
+        "resume": resume,
+        "about_page": about_page,
+        "contact_page": contact_page,
         "navigation": navigation,
         "posts": posts,
         "tags": tags,
@@ -405,7 +456,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
             generate_redirect(output_dir, legacy_path, post.url, meta["canonical_url"])
             rendered_files += 1
 
-    for page in pages:
+    for page in rendered_pages:
         meta = build_meta(config["site"], f"{page.title} | {config['site']['title']}", page.summary, page.url)
         render_template(
             environment,
@@ -426,6 +477,15 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         urls_for_sitemap.append(page.url)
         for legacy_path in page.legacy_paths:
             generate_redirect(output_dir, legacy_path, page.url, meta["canonical_url"])
+            rendered_files += 1
+
+    for page in section_pages:
+        target_url = SECTION_PAGE_TARGETS[page.slug]
+        canonical_url = f"{config['site']['base_url'].rstrip('/')}/"
+        generate_redirect(output_dir, page.output_rel_path, target_url, canonical_url)
+        rendered_files += 1
+        for legacy_path in page.legacy_paths:
+            generate_redirect(output_dir, legacy_path, target_url, canonical_url)
             rendered_files += 1
 
     blog_meta = build_meta(
@@ -490,7 +550,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         "archives.html": "/blog/",
         "tags.html": "/blog/",
         "authors.html": "/blog/",
-        "contact.html": "/",
+        "contact.html": SECTION_PAGE_TARGETS["contact"],
     }.items():
         generate_redirect(output_dir, old_path, target, f"{config['site']['base_url'].rstrip('/')}{target}")
         rendered_files += 1

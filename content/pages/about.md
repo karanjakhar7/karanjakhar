@@ -2,8 +2,7 @@
 title: "About"
 slug: "about"
 summary: "I am an engineer working at the intersection of AI systems and real-world applications, focused on building reliable systems around large language models, retrieval pipelines, and backend infrastructure."
-show_in_nav: true
-nav_order: 1
+show_in_nav: false
 draft: false
 ---
 
