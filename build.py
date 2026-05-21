@@ -74,7 +74,8 @@ class ContentItem:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(description="Build the karanjakhar.net static site.")
-    parser.add_argument("--serve", action="store_true", help="Serve the output directory on :8000 after building.")
+    parser.add_argument("--serve", action="store_true", help="Serve the output directory after building.")
+    parser.add_argument("--port", type=int, default=8000, help="Port for --serve (default: 8000).")
     parser.add_argument("--drafts", action="store_true", help="Include draft content.")
     parser.add_argument("--clean", action="store_true", help="Delete the output directory before building.")
     return parser.parse_args()
@@ -567,24 +568,39 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     copy_tree(static_dir, output_dir / "static")
     if (CONTENT_ROOT / "assets").exists():
         copy_tree(CONTENT_ROOT / "assets", output_dir / "assets")
-    write_text(output_dir / "static/pygments.css", HtmlFormatter(style="friendly").get_style_defs(".codehilite"))
+    write_pygments_css(output_dir / "static/pygments.css")
     rendered_files += 1
 
     return rendered_files
 
 
-def serve_output(output_dir: Path) -> None:
+def write_pygments_css(path: Path) -> None:
+    light = HtmlFormatter(style="friendly").get_style_defs(".codehilite")
+    dark = HtmlFormatter(style="monokai").get_style_defs(".codehilite")
+    dark = dark.replace(".codehilite", '[data-theme="dark"] .codehilite')
+    write_text(path, f"{light}\n{dark}")
+
+
+def serve_output(output_dir: Path, port: int) -> None:
     class ReusableTCPServer(socketserver.TCPServer):
         allow_reuse_address = True
 
     handler = http.server.SimpleHTTPRequestHandler
     os.chdir(output_dir)
-    with ReusableTCPServer(("", 8000), handler) as httpd:
-        print("Serving output at http://localhost:8000")
-        try:
-            httpd.serve_forever()
-        except KeyboardInterrupt:
-            print("\nStopping server.")
+    try:
+        with ReusableTCPServer(("", port), handler) as httpd:
+            print(f"Serving output at http://localhost:{port}")
+            try:
+                httpd.serve_forever()
+            except KeyboardInterrupt:
+                print("\nStopping server.")
+    except OSError as exc:
+        if exc.errno in {48, 98, 10048}:  # EADDRINUSE on macOS/Linux/Windows
+            raise SystemExit(
+                f"Port {port} is already in use. Stop the other server with "
+                f"`lsof -ti :{port} | xargs kill` or run with `--port`."
+            ) from exc
+        raise
 
 
 def main() -> None:
@@ -608,7 +624,7 @@ def main() -> None:
     )
 
     if args.serve:
-        serve_output(output_dir)
+        serve_output(output_dir, args.port)
 
 
 if __name__ == "__main__":
