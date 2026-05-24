@@ -1,0 +1,87 @@
+---
+description: Use this skill when the user asks to commit, create a git commit, or run /commit. Stage changes and commit properly
+alwaysApply: false
+---
+
+# Standard Commit Guideline
+
+Use this guideline when preparing and creating Git commits. The goal is to produce clear, consistent, reviewable commits that describe what changed and why.
+
+## Workflow
+
+1. Check the current branch name:
+  ```bash
+   git branch --show-current
+  ```
+2. Review the working tree:
+  ```bash
+   git status
+  ```
+3. Review the full diff before staging:
+  ```bash
+   git diff HEAD
+  ```
+4. Derive the task name from the branch name when the branch represents a specific task.
+  - Convert kebab-case to Title Case.
+  - Wrap the result in square brackets.
+  - Example: `fix-login-validation` becomes `[Fix Login Validation]`.
+5. Stage only the files that belong in the commit:
+  ```bash
+   git add <file-1> <file-2>
+  ```
+6. Create the commit using the standard message format below.
+
+## Commit Message Format
+
+```text
+[Task Name] - [Summary]
+- change 1
+- change 2
+```
+
+## Message Guidelines
+
+### Task name
+
+Use the task name derived from the branch when available.
+
+If the branch name is not task-based, use a concise descriptive label that matches the change.
+
+### Summary
+
+Write the first line as a short summary of the primary change, keywords are okay too.
+
+The summary should:
+
+- Appear on the same line as the task name after `-`.
+- Describe the main outcome of the commit.
+- Be concise and developer-readable.
+
+### Detail bullets
+
+Use bullets for the remaining meaningful changes.
+
+Each bullet should:
+
+- Describe one logical change.
+- Explain what changed and why.
+- Avoid unnecessary implementation detail unless it affects review or future maintenance.
+
+## Example
+
+```text
+[Fix Login Validation] - improve handling of invalid login attempts
+- add validation for missing email and password fields
+- show a clear error message when credentials are invalid
+- keep users on the login form after failed submission
+```
+
+## Constraints
+
+- Never commit `.env` files or credentials.
+- Never use `--no-verify`.
+- Never amend a previous commit unless explicitly required by the repository workflow.
+- Ask before staging files when it is unclear which changes belong in the commit.
+- Never use broad staging commands such as `git add -A` or `git add .` unless the repository workflow explicitly allows them.
+- Do not include `Co-Authored-By` trailers unless collaboration attribution is explicitly required.
+
