@@ -83,5 +83,5 @@ Each bullet should:
 - Never amend a previous commit unless explicitly required by the repository workflow.
 - Ask before staging files when it is unclear which changes belong in the commit.
 - Never use broad staging commands such as `git add -A` or `git add .` unless the repository workflow explicitly allows them.
-- Do not include `Co-Authored-By` trailers unless collaboration attribution is explicitly required.
+- Do not include `Co-Authored-By` or `Co-authored-by`  trailers unless collaboration attribution is explicitly required and asked by user.
 
