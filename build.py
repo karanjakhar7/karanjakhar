@@ -566,6 +566,16 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         rendered_files += 1
 
     copy_tree(static_dir, output_dir / "static")
+    for favicon_name in (
+        "favicon.svg",
+        "favicon.ico",
+        "favicon-32.png",
+        "apple-touch-icon.png",
+    ):
+        favicon_path = static_dir / favicon_name
+        if favicon_path.exists():
+            shutil.copy2(favicon_path, output_dir / favicon_name)
+            rendered_files += 1
     if (CONTENT_ROOT / "assets").exists():
         copy_tree(CONTENT_ROOT / "assets", output_dir / "assets")
     write_pygments_css(output_dir / "static/pygments.css")
