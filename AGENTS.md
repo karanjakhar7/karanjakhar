@@ -11,7 +11,7 @@
 - `content/blog/`: blog posts with YAML frontmatter.
 - `content/pages/`: standalone pages with YAML frontmatter.
 - `content/assets/`: static content assets copied to `/assets/` in the build output.
-- `themes/minimal/`: tracked theme templates and CSS.
+- `themes/minimal/`: tracked theme templates, CSS, and `static/hero-constellation.js` (the animated site-wide background).
 - `.github/workflows/deploy.yml`: CI build and deploy workflow.
 - `CNAME`: custom domain, copied into `output/` during builds.
 - `pyproject.toml` and `uv.lock`: Python dependency management via `uv`.
@@ -48,7 +48,7 @@
 
 ## Editing Notes
 
-- Keep the site static and JS-free unless there is a clear need.
+- Keep the site static and JS-free unless there is a clear need. The one exception is `themes/minimal/static/hero-constellation.js`, a dependency-free Canvas 2D background animation loaded site-wide via `base.html`.
 - Use root-relative links in templates for normal navigation.
 - Use `site.base_url` only for canonical/meta/feed/sitemap output.
 - `output/` is generated and should not be edited by hand.

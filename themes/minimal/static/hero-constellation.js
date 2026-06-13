@@ -11,11 +11,14 @@
   var GOLD = "231, 197, 154"; // --accent #e7c59a as rgb
   var FOCAL = 480;            // perspective focal length
   var LINK_DIST = 130;        // px (screen space) to draw a connecting line
+  var CURSOR_DIST = 180;      // px reach of the cursor "node"
   var reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
 
   var W = 0, H = 0, dpr = 1;
   var points = [];
   var angleY = 0, angleX = 0;
+  var parX = 0, parY = 0, parTX = 0, parTY = 0; // parallax tilt (current + target)
+  var mouseX = 0, mouseY = 0, hasMouse = false;
   var running = false, rafId = 0, inView = true;
 
   function build() {
@@ -47,8 +50,8 @@
   function draw() {
     ctx.clearRect(0, 0, W, H);
     var cx = W / 2, cy = H / 2;
-    var cosY = Math.cos(angleY), sinY = Math.sin(angleY);
-    var cosX = Math.cos(angleX), sinX = Math.sin(angleX);
+    var cosY = Math.cos(angleY + parY), sinY = Math.sin(angleY + parY);
+    var cosX = Math.cos(angleX + parX), sinX = Math.sin(angleX + parX);
     var proj = [];
 
     for (var i = 0; i < points.length; i++) {
@@ -85,6 +88,24 @@
       }
     }
 
+    // cursor as a live node: reach toward nearby points
+    if (hasMouse) {
+      for (var c = 0; c < proj.length; c++) {
+        var mdx = mouseX - proj[c].sx;
+        var mdy = mouseY - proj[c].sy;
+        var md = Math.sqrt(mdx * mdx + mdy * mdy);
+        if (md < CURSOR_DIST) {
+          var ca = (1 - md / CURSOR_DIST) * 0.55;
+          ctx.strokeStyle = "rgba(" + GOLD + "," + ca.toFixed(3) + ")";
+          ctx.lineWidth = 1;
+          ctx.beginPath();
+          ctx.moveTo(mouseX, mouseY);
+          ctx.lineTo(proj[c].sx, proj[c].sy);
+          ctx.stroke();
+        }
+      }
+    }
+
     for (var j = 0; j < proj.length; j++) {
       var pr = proj[j];
       var r = Math.max(0.6, pr.scale * 1.7);
@@ -98,6 +119,8 @@
   function tick() {
     angleY += 0.0014;
     angleX = Math.sin(angleY * 0.5) * 0.18; // gentle tilt, no full X spin
+    parY += (parTY - parY) * 0.05;          // ease toward cursor-driven tilt
+    parX += (parTX - parX) * 0.05;
     draw();
     rafId = requestAnimationFrame(tick);
   }
@@ -132,6 +155,19 @@
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) stop(); else start();
   });
+
+  if (!reduce) {
+    window.addEventListener("mousemove", function (e) {
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+      hasMouse = true;
+      parTY = (mouseX / W - 0.5) * 0.6; // mouse X -> yaw tilt
+      parTX = (mouseY / H - 0.5) * 0.4; // mouse Y -> pitch tilt
+    });
+    window.addEventListener("mouseout", function (e) {
+      if (!e.relatedTarget) { hasMouse = false; parTX = 0; parTY = 0; }
+    });
+  }
 
   if ("IntersectionObserver" in window) {
     new IntersectionObserver(function (entries) {
