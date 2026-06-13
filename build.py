@@ -4,6 +4,7 @@ import argparse
 import email.utils
 import html
 import http.server
+import json
 import math
 import os
 import re
@@ -317,7 +318,7 @@ def copy_tree(source: Path, destination: Path) -> None:
     shutil.copytree(source, destination)
 
 
-def build_meta(site: dict[str, Any], title: str, description: str, url: str) -> dict[str, str]:
+def build_meta(site: dict[str, Any], title: str, description: str, url: str, image: str = "") -> dict[str, str]:
     canonical = f"{site['base_url'].rstrip('/')}{url}"
     return {
         "title": title,
@@ -326,7 +327,42 @@ def build_meta(site: dict[str, Any], title: str, description: str, url: str) -> 
         "og_title": title,
         "og_description": description,
         "og_url": canonical,
+        "og_image": image,
     }
+
+
+def build_json_ld(config: dict[str, Any], kind: str, item: ContentItem | None = None, image: str = "") -> str:
+    """Return a schema.org JSON-LD string. kind is 'post' or 'home'."""
+    site = config["site"]
+    base = site["base_url"].rstrip("/")
+    social = config.get("social", {})
+    same_as = [url for url in (social.get("github"), social.get("linkedin")) if url]
+    person = {"@type": "Person", "name": site["author"], "url": f"{base}/"}
+    if same_as:
+        person["sameAs"] = same_as
+
+    if kind == "post" and item is not None:
+        data: dict[str, Any] = {
+            "@context": "https://schema.org",
+            "@type": "BlogPosting",
+            "headline": item.title,
+            "description": item.summary,
+            "mainEntityOfPage": f"{base}{item.url}",
+            "author": person,
+        }
+        if item.date_value:
+            data["datePublished"] = item.date_value.isoformat()
+        if image:
+            data["image"] = image
+    else:  # home
+        data = {
+            "@context": "https://schema.org",
+            "@graph": [
+                {"@type": "WebSite", "name": site["title"], "url": f"{base}/"},
+                person,
+            ],
+        }
+    return json.dumps(data)
 
 
 def render_template(environment: Environment, template_name: str, destination: Path, **context: Any) -> None:
@@ -351,6 +387,7 @@ def generate_feed(site: dict[str, Any], posts: list[ContentItem], output_dir: Pa
         absolute_url = f"{site['base_url'].rstrip('/')}{post.url}"
         published = email.utils.format_datetime(datetime.combine(post.date_value, datetime.min.time()))
         description = html.escape(post.summary)
+        content_encoded = post.html_body.replace("]]>", "]]]]><![CDATA[>")
         items.append(
             "\n".join(
                 [
@@ -360,6 +397,7 @@ def generate_feed(site: dict[str, Any], posts: list[ContentItem], output_dir: Pa
                     f"    <guid>{html.escape(absolute_url)}</guid>",
                     f"    <pubDate>{published}</pubDate>",
                     f"    <description>{description}</description>",
+                    f"    <content:encoded><![CDATA[{content_encoded}]]></content:encoded>",
                     "  </item>",
                 ]
             )
@@ -368,7 +406,7 @@ def generate_feed(site: dict[str, Any], posts: list[ContentItem], output_dir: Pa
     feed = "\n".join(
         [
             '<?xml version="1.0" encoding="UTF-8"?>',
-            '<rss version="2.0">',
+            '<rss version="2.0" xmlns:content="http://purl.org/rss/1.0/modules/content/">',
             "  <channel>",
             f"    <title>{html.escape(site['title'])}</title>",
             f"    <link>{html.escape(site['base_url'])}</link>",
@@ -382,13 +420,22 @@ def generate_feed(site: dict[str, Any], posts: list[ContentItem], output_dir: Pa
     write_text(output_dir / "feed.xml", feed)
 
 
-def generate_sitemap(site: dict[str, Any], output_dir: Path, urls: list[str]) -> None:
+def generate_sitemap(site: dict[str, Any], output_dir: Path, urls: list[tuple[str, str | None]]) -> None:
     lines = ['<?xml version="1.0" encoding="UTF-8"?>', '<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">']
-    for url in urls:
+    for url, lastmod in urls:
         absolute = f"{site['base_url'].rstrip('/')}{url}"
-        lines.extend(["  <url>", f"    <loc>{html.escape(absolute)}</loc>", "  </url>"])
+        lines.append("  <url>")
+        lines.append(f"    <loc>{html.escape(absolute)}</loc>")
+        if lastmod:
+            lines.append(f"    <lastmod>{lastmod}</lastmod>")
+        lines.append("  </url>")
     lines.append("</urlset>")
     write_text(output_dir / "sitemap.xml", "\n".join(lines))
+
+
+def generate_robots(site: dict[str, Any], output_dir: Path) -> None:
+    sitemap_url = f"{site['base_url'].rstrip('/')}/sitemap.xml"
+    write_text(output_dir / "robots.txt", f"User-agent: *\nAllow: /\n\nSitemap: {sitemap_url}\n")
 
 
 def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[ContentItem], output_dir: Path) -> int:
@@ -432,10 +479,14 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         "current_year": datetime.now().year,
     }
     rendered_files = 0
-    urls_for_sitemap = ["/", "/blog/"]
+    base_url = config["site"]["base_url"].rstrip("/")
+    hero_image = str(config.get("hero", {}).get("image", "")).strip()
+    default_image = f"{base_url}{hero_image}" if hero_image.startswith("/") else hero_image
+    newest_date = posts[0].date_value.isoformat() if posts and posts[0].date_value else None
+    urls_for_sitemap: list[tuple[str, str | None]] = [("/", newest_date), ("/blog/", newest_date)]
 
     for post in posts:
-        meta = build_meta(config["site"], f"{post.title} | {config['site']['title']}", post.summary, post.url)
+        meta = build_meta(config["site"], f"{post.title} | {config['site']['title']}", post.summary, post.url, default_image)
         render_template(
             environment,
             "blog_post.html",
@@ -448,17 +499,21 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
             og_title=meta["og_title"],
             og_description=meta["og_description"],
             og_url=meta["og_url"],
+            og_image=meta["og_image"],
+            og_type="article",
+            published_time=post.date_value.isoformat() if post.date_value else None,
+            json_ld=build_json_ld(config, "post", post, default_image),
             active_url=post.url,
             body_class="blog-post-page",
         )
         rendered_files += 1
-        urls_for_sitemap.append(post.url)
+        urls_for_sitemap.append((post.url, post.date_value.isoformat() if post.date_value else None))
         for legacy_path in post.legacy_paths:
             generate_redirect(output_dir, legacy_path, post.url, meta["canonical_url"])
             rendered_files += 1
 
     for page in rendered_pages:
-        meta = build_meta(config["site"], f"{page.title} | {config['site']['title']}", page.summary, page.url)
+        meta = build_meta(config["site"], f"{page.title} | {config['site']['title']}", page.summary, page.url, default_image)
         render_template(
             environment,
             "page.html",
@@ -471,11 +526,12 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
             og_title=meta["og_title"],
             og_description=meta["og_description"],
             og_url=meta["og_url"],
+            og_image=meta["og_image"],
             active_url=page.url,
             body_class="page",
         )
         rendered_files += 1
-        urls_for_sitemap.append(page.url)
+        urls_for_sitemap.append((page.url, None))
         for legacy_path in page.legacy_paths:
             generate_redirect(output_dir, legacy_path, page.url, meta["canonical_url"])
             rendered_files += 1
@@ -494,6 +550,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         f"Blog | {config['site']['title']}",
         "Essays on technology, systems, and ideas.",
         "/blog/",
+        default_image,
     )
     render_template(
         environment,
@@ -506,12 +563,13 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         og_title=blog_meta["og_title"],
         og_description=blog_meta["og_description"],
         og_url=blog_meta["og_url"],
+        og_image=blog_meta["og_image"],
         active_url="/blog/",
         body_class="blog-index-page",
     )
     rendered_files += 1
 
-    home_meta = build_meta(config["site"], config["site"]["title"], config["site"]["description"], "/")
+    home_meta = build_meta(config["site"], config["site"]["title"], config["site"]["description"], "/", default_image)
     render_template(
         environment,
         "index.html",
@@ -524,12 +582,14 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         og_title=home_meta["og_title"],
         og_description=home_meta["og_description"],
         og_url=home_meta["og_url"],
+        og_image=home_meta["og_image"],
+        json_ld=build_json_ld(config, "home", image=default_image),
         active_url="/",
         body_class="home-page",
     )
     rendered_files += 1
 
-    not_found_meta = build_meta(config["site"], f"Page Not Found | {config['site']['title']}", "The page you requested could not be found.", "/404.html")
+    not_found_meta = build_meta(config["site"], f"Page Not Found | {config['site']['title']}", "The page you requested could not be found.", "/404.html", default_image)
     render_template(
         environment,
         "404.html",
@@ -541,6 +601,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         og_title=not_found_meta["og_title"],
         og_description=not_found_meta["og_description"],
         og_url=not_found_meta["og_url"],
+        og_image=not_found_meta["og_image"],
         active_url="",
         body_class="not-found-page",
     )
@@ -559,6 +620,8 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     generate_feed(config["site"], posts, output_dir)
     rendered_files += 1
     generate_sitemap(config["site"], output_dir, urls_for_sitemap)
+    rendered_files += 1
+    generate_robots(config["site"], output_dir)
     rendered_files += 1
 
     if CNAME_PATH.exists():

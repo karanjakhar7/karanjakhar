@@ -5,6 +5,8 @@ site:
   base_url: "https://karanjakhar.net"
   language: "en"
   timezone: "Asia/Kolkata"
+  # Paste the content value from Google Search Console's HTML-tag verification here.
+  google_site_verification: ""
 
 theme: "minimal"
 
