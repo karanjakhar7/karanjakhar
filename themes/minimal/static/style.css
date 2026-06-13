@@ -56,6 +56,8 @@ img {
 }
 
 .site-shell {
+  position: relative;
+  z-index: 1;
   min-height: 100vh;
 }
 
@@ -112,6 +114,18 @@ img {
 
 .hero {
   padding: 4rem 0 1rem;
+}
+
+#site-bg {
+  position: fixed;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  pointer-events: none;
+  /* fade the cloud away from the central content column so text stays readable */
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, transparent 12%, #000 70%);
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 45%, transparent 12%, #000 70%);
 }
 
 .hero-inner {
