@@ -2,18 +2,8 @@
 <html lang="{{ site.language }}">
 <head>
   <meta charset="utf-8">
-  <script>
-  (function () {
-    try {
-      var t = localStorage.getItem("theme");
-      if (t === "dark" || t === "light") {
-        document.documentElement.setAttribute("data-theme", t);
-      }
-    } catch (e) {}
-  })();
-  </script>
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="color-scheme" content="light dark">
+  <meta name="color-scheme" content="dark">
   <title>{{ page_title }}</title>
   <meta name="description" content="{{ page_description }}">
   <link rel="canonical" href="{{ canonical_url }}">
@@ -27,6 +17,9 @@
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }} Feed" href="/feed.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
   <link rel="stylesheet" href="/static/style.css">
   <link rel="stylesheet" href="/static/pygments.css">
 </head>
@@ -34,37 +27,16 @@
   <div class="site-shell">
     <header class="site-header">
       <div class="container">
-        <div class="brand-lockup">
-          <a class="brand" href="/">{{ site.title }}</a>
-          <p class="brand-note">{{ site.description }}</p>
-        </div>
-        <div class="header-end">
-          <nav class="site-nav" aria-label="Primary">
-            {% for item in navigation %}
-              <a
-                href="{{ item.url }}"
-                {% if item.external %}target="_blank" rel="noreferrer"{% endif %}
-                {% if active_url == item.url %}aria-current="page"{% endif %}
-              >{{ item.title }}</a>
-            {% endfor %}
-          </nav>
-          <button type="button" class="theme-toggle" id="theme-toggle" aria-label="Switch to dark mode" aria-pressed="false">
-            <svg class="icon-moon" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-            </svg>
-            <svg class="icon-sun" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-              <circle cx="12" cy="12" r="5"></circle>
-              <line x1="12" y1="1" x2="12" y2="3"></line>
-              <line x1="12" y1="21" x2="12" y2="23"></line>
-              <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-              <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-              <line x1="1" y1="12" x2="3" y2="12"></line>
-              <line x1="21" y1="12" x2="23" y2="12"></line>
-              <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-              <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-            </svg>
-          </button>
-        </div>
+        <a class="brand" href="/">{{ site.title }}</a>
+        <nav class="site-nav" aria-label="Primary">
+          {% for item in navigation %}
+            <a
+              href="{{ item.url }}"
+              {% if item.external %}target="_blank" rel="noreferrer"{% endif %}
+              {% if active_url == item.url %}aria-current="page"{% endif %}
+            >{{ item.title }}</a>
+          {% endfor %}
+        </nav>
       </div>
     </header>
 
@@ -95,6 +67,5 @@
       </div>
     </footer>
   </div>
-  <script src="/static/theme.js" defer></script>
 </body>
 </html>

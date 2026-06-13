@@ -517,7 +517,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         "index.html",
         output_dir / "index.html",
         **global_context,
-        recent_posts=posts[:3],
+        recent_posts=posts[:6],
         page_title=home_meta["title"],
         page_description=home_meta["description"],
         canonical_url=home_meta["canonical_url"],
@@ -585,10 +585,8 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
 
 
 def write_pygments_css(path: Path) -> None:
-    light = HtmlFormatter(style="friendly").get_style_defs(".codehilite")
     dark = HtmlFormatter(style="monokai").get_style_defs(".codehilite")
-    dark = dark.replace(".codehilite", '[data-theme="dark"] .codehilite')
-    write_text(path, f"{light}\n{dark}")
+    write_text(path, dark)
 
 
 def serve_output(output_dir: Path, port: int) -> None:
