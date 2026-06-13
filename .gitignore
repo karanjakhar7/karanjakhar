@@ -9,8 +9,6 @@ wheels/
 *.DS_Store
 
 tmp/
-.agents/
-.claude/
 
 # Virtual environments
 .venv
