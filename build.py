@@ -634,7 +634,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     home_meta = build_meta(config["site"], home_title, home_description, "/", default_image)
     # Posts in the "Work" category are surfaced as Selected Work; the rest are "latest writing".
     work_posts = [p for p in posts if p.category.lower() == "work"]
-    recent_posts = [p for p in posts if p not in work_posts][:6]
+    recent_posts = [p for p in posts if p not in work_posts][:4]
     render_template(
         environment,
         "index.html",
