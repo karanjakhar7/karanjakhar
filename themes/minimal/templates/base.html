@@ -77,6 +77,9 @@
         <div class="footer-links">
           <a href="{{ social.github }}" rel="noreferrer">GitHub</a>
           <a href="{{ social.linkedin }}" rel="noreferrer">LinkedIn</a>
+          {% if person.twitter %}
+            <a href="{{ person.twitter }}" rel="noreferrer" target="_blank">X</a>
+          {% endif %}
           {% if resume.url %}
             <a href="{{ resume.url }}" rel="noreferrer" target="_blank">Resume</a>
           {% endif %}

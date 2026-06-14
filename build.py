@@ -331,15 +331,53 @@ def build_meta(site: dict[str, Any], title: str, description: str, url: str, ima
     }
 
 
+def build_organization(config: dict[str, Any]) -> dict[str, Any] | None:
+    """Schema.org Organization for the author's company, or None if not configured."""
+    person = config.get("person", {})
+    name = str(person.get("company", "")).strip()
+    if not name:
+        return None
+    org: dict[str, Any] = {"@type": "Organization", "name": name}
+    url = str(person.get("company_url", "")).strip()
+    if url:
+        org["url"] = url
+    same_as = [u for u in (person.get("company_linkedin"), person.get("company_crunchbase")) if str(u or "").strip()]
+    if same_as:
+        org["sameAs"] = same_as
+    return org
+
+
+def build_person(config: dict[str, Any]) -> dict[str, Any]:
+    """Schema.org Person for the site author, enriched from the optional `person` config block."""
+    site = config["site"]
+    base = site["base_url"].rstrip("/")
+    social = config.get("social", {})
+    person_cfg = config.get("person", {})
+    same_as = [
+        url
+        for url in (social.get("github"), social.get("linkedin"), person_cfg.get("twitter"))
+        if str(url or "").strip()
+    ]
+    person: dict[str, Any] = {"@type": "Person", "name": site["author"], "url": f"{base}/"}
+    if same_as:
+        person["sameAs"] = same_as
+    if person_cfg.get("job_title"):
+        person["jobTitle"] = person_cfg["job_title"]
+    if person_cfg.get("bio"):
+        person["description"] = person_cfg["bio"]
+    if person_cfg.get("knows_about"):
+        person["knowsAbout"] = person_cfg["knows_about"]
+    org = build_organization(config)
+    if org:
+        person["worksFor"] = org
+    return person
+
+
 def build_json_ld(config: dict[str, Any], kind: str, item: ContentItem | None = None, image: str = "") -> str:
     """Return a schema.org JSON-LD string. kind is 'post' or 'home'."""
     site = config["site"]
     base = site["base_url"].rstrip("/")
-    social = config.get("social", {})
-    same_as = [url for url in (social.get("github"), social.get("linkedin")) if url]
-    person = {"@type": "Person", "name": site["author"], "url": f"{base}/"}
-    if same_as:
-        person["sameAs"] = same_as
+    person = build_person(config)
 
     if kind == "post" and item is not None:
         data: dict[str, Any] = {
@@ -355,13 +393,29 @@ def build_json_ld(config: dict[str, Any], kind: str, item: ContentItem | None = 
         if image:
             data["image"] = image
     else:  # home
-        data = {
-            "@context": "https://schema.org",
-            "@graph": [
-                {"@type": "WebSite", "name": site["title"], "url": f"{base}/"},
-                person,
-            ],
-        }
+        graph: list[dict[str, Any]] = [
+            {"@type": "WebSite", "name": site["title"], "url": f"{base}/"},
+            person,
+        ]
+        org = build_organization(config)
+        if org:
+            graph.append(org)
+        faq = config.get("faq") or []
+        if faq:
+            graph.append(
+                {
+                    "@type": "FAQPage",
+                    "mainEntity": [
+                        {
+                            "@type": "Question",
+                            "name": entry["q"],
+                            "acceptedAnswer": {"@type": "Answer", "text": entry["a"]},
+                        }
+                        for entry in faq
+                    ],
+                }
+            )
+        data = {"@context": "https://schema.org", "@graph": graph}
     return json.dumps(data)
 
 
@@ -471,6 +525,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         "about": config["about"],
         "contact": contact,
         "resume": resume,
+        "person": config.get("person", {}),
         "about_page": about_page,
         "contact_page": contact_page,
         "navigation": navigation,
@@ -569,13 +624,17 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     )
     rendered_files += 1
 
-    home_meta = build_meta(config["site"], config["site"]["title"], config["site"]["description"], "/", default_image)
+    person_cfg = config.get("person", {})
+    home_title = str(person_cfg.get("headline") or config["site"]["title"])
+    home_description = str(person_cfg.get("bio") or config["site"]["description"])
+    home_meta = build_meta(config["site"], home_title, home_description, "/", default_image)
     render_template(
         environment,
         "index.html",
         output_dir / "index.html",
         **global_context,
         recent_posts=posts[:6],
+        faq=config.get("faq") or [],
         page_title=home_meta["title"],
         page_description=home_meta["description"],
         canonical_url=home_meta["canonical_url"],

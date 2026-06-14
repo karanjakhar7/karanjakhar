@@ -1,7 +1,7 @@
 ---
 title: "About"
 slug: "about"
-summary: "I am an engineer working at the intersection of AI systems and real-world applications, focused on building reliable systems around large language models, retrieval pipelines, and backend infrastructure."
+summary: "I am an AI engineer working at the intersection of AI systems and real-world applications-large language models, retrieval pipelines, and the backend infrastructure behind production AI."
 show_in_nav: false
 draft: false
 ---
@@ -19,3 +19,5 @@ Expect writing that is:
 - Curious about both technical and human questions
 
 The goal isn't to explain everything, but to think carefully about the things that matter.
+
+These days, I am the Founding Engineer at [Marvix AI](https://marvix.ai).

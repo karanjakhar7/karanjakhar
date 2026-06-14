@@ -24,6 +24,26 @@ social:
   github: "https://www.github.com/karanjakhar7"
   linkedin: "https://www.linkedin.com/in/karanjakhar7"
 
+# Identity facts used for the homepage title, Person/Organization schema, and bio.
+# Paste the company_linkedin / company_crunchbase / twitter URLs when you have them.
+person:
+  job_title: "Founding Engineer"
+  company: "Marvix AI"
+  company_url: "https://marvix.ai"
+  company_linkedin: ""      # LinkedIn company page URL
+  company_crunchbase: ""    # Crunchbase URL
+  twitter: ""               # personal X/Twitter profile URL
+  headline: "Karan Jakhar — Founding Engineer at Marvix AI"
+  bio: "Karan Jakhar is a Founding Engineer at Marvix AI, where he builds the company's AI ambient scribe. He works on large language models, retrieval pipelines, and the backend systems behind production AI products."
+  knows_about:
+    - "Artificial Intelligence"
+    - "AI Engineering"
+    - "Large Language Models"
+    - "Ambient Scribe"
+    - "Ambient Clinical Documentation"
+    - "Retrieval-Augmented Generation"
+    - "Backend Infrastructure"
+
 resume:
   url: "https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp"
 
