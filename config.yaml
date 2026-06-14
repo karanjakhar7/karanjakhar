@@ -1,5 +1,5 @@
 site:
-  title: "karanjakhar.net"
+  title: "Karan Jakhar"
   author: "Karan Jakhar"
   description: "I am an engineer working at the intersection of AI systems and real-world applications."
   base_url: "https://karanjakhar.net"
@@ -33,7 +33,7 @@ person:
   company_linkedin: ""      # LinkedIn company page URL
   company_crunchbase: ""    # Crunchbase URL
   twitter: ""               # personal X/Twitter profile URL
-  headline: "Karan Jakhar — Founding Engineer at Marvix AI"
+  headline: "Karan Jakhar — AI Engineer & Writer"
   bio: "Karan Jakhar is a Founding Engineer at Marvix AI, where he builds the company's AI ambient scribe. He works on large language models, retrieval pipelines, and the backend systems behind production AI products."
   knows_about:
     - "Artificial Intelligence"
