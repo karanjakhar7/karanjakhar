@@ -16,7 +16,7 @@ You found the secret page. The kind of person who pokes at corners is the kind o
 location   ~/earth
 stack      python · llms · retrieval · backends
 currently  making intelligent systems reliable
-reach me   karan@marvix.ai
+reach me   kjakhar4321@gmail.com
 ```
 
 Try the konami code on the home page. Press `g` to cut the strings. Click the empty sky.
