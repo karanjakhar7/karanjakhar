@@ -46,6 +46,15 @@
 - Frontmatter should stay YAML-based and concise.
 - `summary` is explicit content, not auto-generated at template time.
 
+### Categories and tags
+
+- Every post has exactly one `category` (the primary bucket, shown as an accent chip on cards, the blog index, and the post header) and a short `tags` list (2-4 finer topics).
+- Categories in use — keep new posts within this set; add a new one only when a post genuinely doesn't fit:
+  - **Philosophy** — reflective / personal essays (the default for non-technical writing).
+  - **Engineering** — technical posts on building AI systems, demonstrating depth.
+  - **Work** — project write-ups. Posts in this category are surfaced in the homepage **Selected Work** section and excluded from "Latest writing" (`build.py`, the `work_posts` filter on `category == "work"`, case-insensitive).
+- `category` is rendered via the `.tag.tag-category` chip; regular `tags` use `.tag`. Both are optional in the data model (`ContentItem.category` defaults to `""`), but every post should set a category.
+
 ## Editing Notes
 
 - Keep the site static and JS-free unless there is a clear need. The one exception is `themes/minimal/static/hero-constellation.js`, a dependency-free Canvas 2D background animation loaded site-wide via `base.html`.

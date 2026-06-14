@@ -2,7 +2,8 @@
 title: "The Illusion of Empty Sacrifices: Stop Mimicking Idols the Wrong Way"
 date: 2025-01-13
 summary: "Sacrifice has value only when it serves a real goal. Empty sacrifices imitate the look of discipline without the purpose that makes discipline meaningful."
-tags: []
+tags: ["Discipline", "Purpose"]
+category: "Philosophy"
 draft: false
 ---
 

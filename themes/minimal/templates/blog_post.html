@@ -5,6 +5,7 @@
     <div class="container narrow">
       <p class="section-label"><a class="text-link" href="/blog/">Back to blog</a></p>
       <header class="article-header">
+        {% if post.category %}<p class="tag-row"><span class="tag tag-category">{{ post.category }}</span></p>{% endif %}
         <h1>{{ post.title }}</h1>
         <p class="post-meta">{{ post.date_display }} · {{ post.reading_time }} min read</p>
         {% if post.tags %}
@@ -16,6 +17,20 @@
         {% endif %}
       </header>
       <div class="article-body">{{ post.html_body | safe }}</div>
+      <div class="contact-panel article-cta">
+        <div class="contact-copy">
+          <p class="section-label">Let's talk</p>
+          <h2>Building something at the edge of AI?</h2>
+        </div>
+        <div class="contact-actions">
+          {% if contact.email %}
+            <a class="button button-secondary-light" href="mailto:{{ contact.email }}">Email me</a>
+          {% endif %}
+          {% if social.linkedin %}
+            <a class="button button-secondary-light" href="{{ social.linkedin }}" rel="noreferrer" target="_blank">LinkedIn</a>
+          {% endif %}
+        </div>
+      </div>
     </div>
   </article>
 {% endblock %}

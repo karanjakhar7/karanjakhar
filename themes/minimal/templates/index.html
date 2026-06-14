@@ -8,8 +8,10 @@
         <h1>{{ hero.title }}</h1>
         <p class="hero-text">{{ hero.text }}</p>
         <div class="hero-actions">
-          <a class="button button-primary" href="/blog/">Read the blog</a>
-          <a class="button button-secondary" href="/#about">About me</a>
+          {% if work %}
+            <a class="button button-primary" href="/#work">See what I've built</a>
+          {% endif %}
+          <a class="button button-secondary" href="/blog/">Read the blog</a>
           {% if resume.url %}
             <a class="button button-secondary" href="{{ resume.url }}" rel="noreferrer" target="_blank">Resume</a>
           {% endif %}
@@ -18,7 +20,7 @@
     </div>
   </section>
 
-  <section class="section home-section-anchor" id="about">
+  <section class="section section-muted home-section-anchor" id="about">
     <div class="container about-grid">
       <div class="about-copy">
         <p class="section-label">About</p>
@@ -27,6 +29,29 @@
       </div>
     </div>
   </section>
+
+  {% if work %}
+  <section class="section home-section-anchor" id="work">
+    <div class="container">
+      <div class="section-heading">
+        <div>
+          <p class="section-label">Selected Work</p>
+          <h2>What I've built.</h2>
+        </div>
+      </div>
+      <div class="post-grid">
+        {% for post in work %}
+          <a class="post-card" href="{{ post.url }}">
+            <p class="post-meta">{{ post.date_display }} · {{ post.reading_time }} min read</p>
+            <h3>{{ post.title }}</h3>
+            <p>{{ post.summary }}</p>
+            <span class="text-link">Read more</span>
+          </a>
+        {% endfor %}
+      </div>
+    </div>
+  </section>
+  {% endif %}
 
   <section class="section section-muted">
     <div class="container">
@@ -40,6 +65,7 @@
       <div class="post-grid">
         {% for post in recent_posts %}
           <a class="post-card" href="{{ post.url }}">
+            {% if post.category %}<p class="tag-row"><span class="tag tag-category">{{ post.category }}</span></p>{% endif %}
             <p class="post-meta">{{ post.date_display }} · {{ post.reading_time }} min read</p>
             <h3>{{ post.title }}</h3>
             <p>{{ post.summary }}</p>

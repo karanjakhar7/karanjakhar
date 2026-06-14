@@ -2,7 +2,8 @@
 title: "Finite vs Infinite Games"
 date: 2023-07-10
 summary: "Life changes depending on whether you play for a fixed win or for continued growth. The infinite-game mindset turns meaning into a practice rather than an end state."
-tags: []
+tags: ["Mindset", "Meaning"]
+category: "Notions"
 draft: false
 ---
 

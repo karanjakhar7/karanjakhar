@@ -59,6 +59,7 @@ class ContentItem:
     legacy_paths: list[str]
     summary: str
     tags: list[str]
+    category: str
     draft: bool
     html_body: str
     raw_body: str
@@ -222,6 +223,7 @@ def load_content(directory: Path, content_type: str, include_drafts: bool) -> li
         html_body = markdown_to_html(body)
         summary = str(metadata.get("summary") or build_summary(body, fallback=title))
         tags = coerce_tags(metadata.get("tags"))
+        category = str(metadata.get("category") or "").strip()
 
         if content_type == "post":
             item_date = parse_date(metadata.get("date"), path)
@@ -238,6 +240,7 @@ def load_content(directory: Path, content_type: str, include_drafts: bool) -> li
                 legacy_paths=legacy_paths,
                 summary=summary,
                 tags=tags,
+                category=category,
                 draft=draft,
                 html_body=html_body,
                 raw_body=body,
@@ -259,6 +262,7 @@ def load_content(directory: Path, content_type: str, include_drafts: bool) -> li
                 legacy_paths=legacy_paths,
                 summary=summary,
                 tags=tags,
+                category=category,
                 draft=draft,
                 html_body=html_body,
                 raw_body=body,
@@ -628,13 +632,16 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     home_title = str(person_cfg.get("headline") or config["site"]["title"])
     home_description = str(person_cfg.get("bio") or config["site"]["description"])
     home_meta = build_meta(config["site"], home_title, home_description, "/", default_image)
+    # Posts in the "Work" category are surfaced as Selected Work; the rest are "latest writing".
+    work_posts = [p for p in posts if p.category.lower() == "work"]
+    recent_posts = [p for p in posts if p not in work_posts][:6]
     render_template(
         environment,
         "index.html",
         output_dir / "index.html",
         **global_context,
-        recent_posts=posts[:6],
-        faq=config.get("faq") or [],
+        recent_posts=recent_posts,
+        work=work_posts,
         page_title=home_meta["title"],
         page_description=home_meta["description"],
         canonical_url=home_meta["canonical_url"],

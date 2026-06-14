@@ -2,7 +2,8 @@
 title: "Notes on Finding Your Own Way"
 date: 2026-06-14
 summary: "On contentment over happiness, the role of desire and hedonism in the journey toward wisdom, and the only game worth playing — your own."
-tags: []
+tags: ["Meaning", "Contentment"]
+category: "Notions"
 draft: false
 ---
 

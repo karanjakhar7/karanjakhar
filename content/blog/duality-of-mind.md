@@ -2,7 +2,8 @@
 title: "Duality of Mind"
 date: 2023-08-21
 summary: "The inner voice is a dialogue, not a monologue. One side urges action while the other looks for excuses, and discipline comes from learning which voice to follow."
-tags: []
+tags: ["Discipline", "Self-mastery"]
+category: "Notions"
 draft: false
 ---
 

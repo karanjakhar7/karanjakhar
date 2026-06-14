@@ -361,6 +361,10 @@ a.post-card:hover {
   gap: 0.9rem;
 }
 
+.article-cta {
+  margin-top: 3.5rem;
+}
+
 .post-card h2,
 .post-card h3 {
   margin: 0.25rem 0 0.5rem;
@@ -397,6 +401,33 @@ a.post-card:hover {
   font-size: 0.75rem;
   text-transform: uppercase;
   letter-spacing: -0.011em;
+}
+
+.tag-category {
+  background: transparent;
+  color: var(--accent);
+  border: 1px solid var(--accent);
+}
+
+.post-filter {
+  width: 100%;
+  margin-bottom: 2.5rem;
+  padding: 0.75rem 1rem;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: var(--radius-sm);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.9rem;
+}
+
+.post-filter:focus {
+  outline: none;
+  border-color: var(--accent);
+}
+
+.post-stack .tag {
+  cursor: pointer;
 }
 
 .page-intro {

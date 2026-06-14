@@ -2,7 +2,8 @@
 title: "Ideal State Fallacy"
 date: 2024-02-11
 summary: "The perfect time to begin or deliver never arrives. Waiting for ideal conditions often hides fear, while progress comes from acting before everything feels ready."
-tags: []
+tags: ["Action", "Perfectionism"]
+category: "Notions"
 draft: false
 ---
 

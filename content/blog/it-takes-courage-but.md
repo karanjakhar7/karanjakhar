@@ -2,7 +2,8 @@
 title: "It Takes Courage, But..."
 date: 2024-03-11
 summary: "Courage rewards action regardless of direction, which is why real goodness requires more than passive harmlessness. Strength matters because choosing rightly only means something when you could do otherwise."
-tags: []
+tags: ["Courage", "Character"]
+category: "Philosophy"
 draft: false
 ---
 
