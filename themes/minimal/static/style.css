@@ -232,6 +232,13 @@ img {
   border-color: var(--ink);
 }
 
+/* Resume is the quietest CTA — dimmer border + text than the others
+   (creator vibe, not job-seeker). Same on web and mobile. */
+.hero-resume {
+  border-color: var(--accent-quote);
+  color: var(--ink-soft);
+}
+
 .section {
   padding: 3.5rem 0;
 }
@@ -758,13 +765,23 @@ a.post-card:hover {
     margin-top: 1.25rem;
   }
 
-  /* CTAs fill the row and meet the 44px touch-target guideline */
+  /* CTAs meet the 44px touch-target guideline */
   .button {
     min-height: 44px;
   }
 
+  /* two CTAs share one row as equal halves; trimmed padding/font keeps the
+     longer label on a single line on narrow phones */
   .hero-actions .button {
-    flex: 1 1 auto;
+    flex: 1 1 0;
+    padding: 0.625rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* Resume is already in the top nav — drop the redundant hero button on
+     mobile to save a full row and lift the headshot. */
+  .hero-actions .hero-resume {
+    display: none;
   }
 
   /* narrow screens: the cloud is compact and sits right under the text, so the
