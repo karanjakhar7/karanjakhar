@@ -116,6 +116,13 @@ img {
   padding: 4rem 0 1rem;
 }
 
+/* No animated background while reading — keep blog posts distraction-free.
+   The IntersectionObserver in hero-constellation.js stops the loop once the
+   canvas is hidden, so this also halts the render work. */
+.blog-post-page #site-bg {
+  display: none;
+}
+
 #site-bg {
   position: fixed;
   inset: 0;
@@ -505,6 +512,14 @@ a.post-card:hover {
 @media (max-width: 640px) {
   .hero {
     padding: 4rem 0 3rem;
+  }
+
+  /* narrow screens: the cloud is compact and sits right under the text, so the
+     desktop mask can't clear it. Fade it down and open a bigger hole instead. */
+  #site-bg {
+    opacity: 0.75;
+    -webkit-mask-image: radial-gradient(ellipse 95% 65% at 50% 42%, transparent 18%, #000 92%);
+    mask-image: radial-gradient(ellipse 95% 65% at 50% 42%, transparent 18%, #000 92%);
   }
 
   .section {

@@ -144,13 +144,21 @@
   }
 
   var resizeTimer;
-  window.addEventListener("resize", function () {
+  function scheduleRebuild() {
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
       build();
       if (reduce) draw();
     }, 200);
-  });
+  }
+  window.addEventListener("resize", scheduleRebuild);
+
+  // Mobile: the fixed canvas grows when the URL bar collapses, but window
+  // "resize" only fires on scroll and the stale bitmap stretches until then.
+  // ResizeObserver catches the actual element size change (incl. first paint).
+  if ("ResizeObserver" in window) {
+    new ResizeObserver(scheduleRebuild).observe(canvas);
+  }
 
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) stop(); else start();
