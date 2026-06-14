@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="section article-shell">
+    <div class="container narrow">
+      <div class="terminal" role="region" aria-label="terminal">
+        <div class="terminal-bar">
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-dot"></span>
+          <span class="terminal-title">karan@karanjakhar.net: ~</span>
+        </div>
+        <div class="terminal-body">
+          <p class="terminal-line"><span class="terminal-prompt">$</span> whoami</p>
+          <div class="terminal-out">{{ page.html_body | safe }}</div>
+          <p class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cursor" aria-hidden="true"></span></p>
+        </div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

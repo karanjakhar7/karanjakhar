@@ -516,7 +516,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         meta = build_meta(config["site"], f"{page.title} | {config['site']['title']}", page.summary, page.url, default_image)
         render_template(
             environment,
-            "page.html",
+            "whoami.html" if page.slug == "whoami" else "page.html",  # egg #6: secret terminal page
             output_dir / page.output_rel_path,
             **global_context,
             page=page,

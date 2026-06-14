@@ -3,6 +3,11 @@
 (function () {
   "use strict";
 
+  // egg #5: devs open the console. say hi.
+  console.log("%c✦ karanjakhar.net", "color:#e7c59a;font-size:14px;font-weight:700");
+  console.log("%cpoking around in here? i like you. say hi 👋", "color:#949494");
+  console.log("%cps. there's a konami code somewhere.", "color:#5a5a5a");
+
   var canvas = document.getElementById("site-bg");
   if (!canvas) return;
   var ctx = canvas.getContext("2d");
@@ -66,7 +71,8 @@
       proj.push({
         sx: cx + x1 * scale,
         sy: cy + y1 * scale,
-        scale: scale
+        scale: scale,
+        big: p.big
       });
     }
 
@@ -108,7 +114,7 @@
 
     for (var j = 0; j < proj.length; j++) {
       var pr = proj[j];
-      var r = Math.max(0.6, pr.scale * 1.7);
+      var r = Math.max(0.6, pr.scale * 1.7) * (pr.big ? 2 : 1); // spawned stars read bigger
       ctx.fillStyle = "rgba(" + GOLD + "," + (pr.scale * 0.9).toFixed(3) + ")";
       ctx.beginPath();
       ctx.arc(pr.sx, pr.sy, r, 0, Math.PI * 2);
@@ -116,13 +122,55 @@
     }
   }
 
+  var gravity = false, rising = false; // egg #4 state
+
   function tick() {
-    angleY += 0.0014;
-    angleX = Math.sin(angleY * 0.5) * 0.18; // gentle tilt, no full X spin
+    if (gravity) {
+      applyGravity(); // strings cut: the cloud falls, rotation frozen
+    } else if (rising) {
+      applyRise();    // strings reattached: float back up to where they fell from
+    } else {
+      angleY += 0.0014;
+      angleX = Math.sin(angleY * 0.5) * 0.18; // gentle tilt, no full X spin
+    }
     parY += (parTY - parY) * 0.05;          // ease toward cursor-driven tilt
     parX += (parTX - parX) * 0.05;
     draw();
     rafId = requestAnimationFrame(tick);
+  }
+
+  function applyGravity() {
+    var floor = H * 0.5; // ~bottom edge in model space (scale ~1 near center)
+    for (var i = 0; i < points.length; i++) {
+      var p = points[i];
+      p.dx *= 0.9; p.dz *= 0.9; // settle sideways drift
+      if (p.y < floor) {
+        p.dy += 0.7; // accelerate downward
+      } else {
+        p.y = floor; p.dx = p.dy = p.dz = 0; // rest on the floor
+      }
+    }
+  }
+
+  function applyRise() {
+    var done = true;
+    for (var i = 0; i < points.length; i++) {
+      var p = points[i];
+      p.x += (p.hx - p.x) * 0.08; // ease back toward captured home
+      p.y += (p.hy - p.y) * 0.08;
+      p.z += (p.hz - p.z) * 0.08;
+      if (Math.abs(p.hy - p.y) > 0.5) done = false;
+    }
+    if (done) { // snap home and hand back to drifting motion
+      for (var j = 0; j < points.length; j++) {
+        var q = points[j];
+        q.x = q.hx; q.y = q.hy; q.z = q.hz;
+        q.dx = (Math.random() - 0.5) * 0.18;
+        q.dy = (Math.random() - 0.5) * 0.18;
+        q.dz = (Math.random() - 0.5) * 0.18;
+      }
+      rising = false;
+    }
   }
 
   function start() {
@@ -183,4 +231,83 @@
       if (inView) start(); else stop();
     }).observe(canvas);
   }
+
+  // egg #2: konami code -> the constellation goes supernova, then re-forms.
+  var KONAMI = ["ArrowUp", "ArrowUp", "ArrowDown", "ArrowDown",
+    "ArrowLeft", "ArrowRight", "ArrowLeft", "ArrowRight", "b", "a"];
+  var konamiPos = 0;
+  function supernova() {
+    for (var i = 0; i < points.length; i++) {
+      var p = points[i];
+      var len = Math.sqrt(p.x * p.x + p.y * p.y + p.z * p.z) || 1;
+      var v = 9; // outward burst speed; build() resets the cloud after
+      p.dx = (p.x / len) * v;
+      p.dy = (p.y / len) * v;
+      p.dz = (p.z / len) * v;
+    }
+    if (reduce) { build(); draw(); return; } // no loop in reduce mode
+    setTimeout(build, 1100); // collapse back into a fresh cloud
+  }
+  window.addEventListener("keydown", function (e) {
+    var k = e.key.length === 1 ? e.key.toLowerCase() : e.key;
+    konamiPos = k === KONAMI[konamiPos] ? konamiPos + 1 : (k === KONAMI[0] ? 1 : 0);
+    if (konamiPos === KONAMI.length) { konamiPos = 0; supernova(); }
+  });
+
+  // egg #1: "darker" -> fade the world to the void, hide the only way out.
+  var darker = document.getElementById("void-toggle");
+  if (darker) {
+    darker.addEventListener("click", function () {
+      var ov = document.createElement("div");
+      ov.className = "void-overlay";
+      ov.innerHTML = '<p>this is the darkest</p>' +
+        '<button type="button" class="void-back">come back</button>';
+      document.body.appendChild(ov);
+      stop();
+      requestAnimationFrame(function () { ov.classList.add("on"); });
+      ov.querySelector(".void-back").addEventListener("click", function () {
+        ov.classList.remove("on");
+        setTimeout(function () { ov.remove(); start(); }, 600);
+      });
+    });
+  }
+
+  // egg #3: click empty space -> drop a new star into the cloud; it links up.
+  function isInteractive(t) {
+    return t.closest && t.closest("a, button, input, textarea, select, label");
+  }
+  window.addEventListener("click", function (e) {
+    if (reduce || isInteractive(e.target)) return;
+    if (points.length > 160) return; // ponytail: cap keeps the O(n^2) draw cheap
+    var x1 = e.clientX - W / 2;
+    var ang = angleY + parY;
+    // place it under the cursor for this frame (inverse Y-rotation, depth ~0)
+    points.push({
+      x: x1 * Math.cos(ang),
+      y: e.clientY - H / 2,
+      z: -x1 * Math.sin(ang),
+      dx: (Math.random() - 0.5) * 0.18,
+      dy: (Math.random() - 0.5) * 0.18,
+      dz: (Math.random() - 0.5) * 0.18,
+      big: true
+    });
+    if (!running) draw(); // gravity/paused: still show the new star
+  });
+
+  // egg #4: press "g" to cut the strings — the cloud falls; press again to float back up.
+  window.addEventListener("keydown", function (e) {
+    if (reduce || (e.key !== "g" && e.key !== "G")) return;
+    if (e.target.matches && e.target.matches("input, textarea")) return;
+    if (gravity) {
+      gravity = false; rising = true; // reattach: animate back to home positions
+    } else {
+      for (var i = 0; i < points.length; i++) { // remember where each star floated
+        points[i].hx = points[i].x;
+        points[i].hy = points[i].y;
+        points[i].hz = points[i].z;
+      }
+      gravity = true; rising = false;
+      start();
+    }
+  });
 })();
