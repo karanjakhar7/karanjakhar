@@ -6,8 +6,6 @@ show_in_nav: false
 draft: false
 ---
 
-If you want to talk about engineering, AI systems, backend infrastructure, consulting, or a potential role, feel free to reach out.
+Always up for talking shop — AI systems, backend infrastructure, a hard problem you're stuck on, or something you're building.
 
-Email is the best way to contact me for anything important. If it makes sense, include a little context about what you're working on or what you'd like to discuss.
-
-You can also find me on [LinkedIn](https://www.linkedin.com/in/karanjakhar7).
+Email's best. A line of context about what's on your mind helps. You can also find me on [LinkedIn](https://www.linkedin.com/in/karanjakhar7).

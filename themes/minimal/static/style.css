@@ -362,12 +362,27 @@ a.post-card:hover {
   line-height: 1.1;
 }
 
-.contact-actions {
+/* CTAs sit under the contact copy, side by side */
+.contact-cta {
   display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  justify-content: center;
-  gap: 0.9rem;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 2rem;
+}
+
+/* right column is a standalone neural-net visual */
+.contact-net {
+  position: relative;
+  min-height: 300px;
+}
+
+.contact-net-canvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none;
+  opacity: 0.6; /* keep it a quiet backdrop so the CTA stays dominant */
 }
 
 .article-cta {
@@ -692,6 +707,9 @@ a.post-card:hover {
     flex-direction: column;
     align-items: flex-start;
   }
+
+  /* panel stacks on mobile — the net would be a tall empty block under the copy */
+  .contact-net { display: none; }
 
   /* header stacks (brand over nav) on mobile — pin the egg to the empty
      top-right corner instead of letting it drop onto its own row */
