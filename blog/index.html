@@ -67,40 +67,142 @@ target="_blank" rel="noreferrer"            >Resume</a>
 
   <section class="section section-tight">
     <div class="container narrow">
+      <input type="search" id="post-filter" class="post-filter" placeholder="Filter by tag, category, or keyword" aria-label="Filter posts">
       <div class="post-stack">
           <article class="post-card">
-            <p class="post-meta">June 14, 2026 · 3 min read</p>
+<p class="tag-row"><span class="tag tag-category">Notions</span></p>            <p class="post-meta">June 14, 2026 · 3 min read</p>
             <h2><a href="/blog/notes-on-finding-your-own-way/">Notes on Finding Your Own Way</a></h2>
             <p>On contentment over happiness, the role of desire and hedonism in the journey toward wisdom, and the only game worth playing — your own.</p>
+              <p class="tag-row">
+                  <span class="tag">Meaning</span>
+                  <span class="tag">Contentment</span>
+              </p>
           </article>
           <article class="post-card">
-            <p class="post-meta">January 13, 2025 · 4 min read</p>
+<p class="tag-row"><span class="tag tag-category">Philosophy</span></p>            <p class="post-meta">January 13, 2025 · 4 min read</p>
             <h2><a href="/blog/empty-sacrifice/">The Illusion of Empty Sacrifices: Stop Mimicking Idols the Wrong Way</a></h2>
             <p>Sacrifice has value only when it serves a real goal. Empty sacrifices imitate the look of discipline without the purpose that makes discipline meaningful.</p>
+              <p class="tag-row">
+                  <span class="tag">Discipline</span>
+                  <span class="tag">Purpose</span>
+              </p>
           </article>
           <article class="post-card">
-            <p class="post-meta">March 11, 2024 · 2 min read</p>
+<p class="tag-row"><span class="tag tag-category">Work</span></p>            <p class="post-meta">September 3, 2024 · 3 min read</p>
+            <h2><a href="/blog/marvix-ai-ambient-scribe/">Marvix AI: Building an Ambient Scribe from Scratch</a></h2>
+            <p>What I&#39;m building at Marvix AI — an ambient scribe that listens, understands, and writes so people don&#39;t have to — and what it takes to make AI dependable enough to disappear into someone&#39;s workflow.</p>
+              <p class="tag-row">
+                  <span class="tag">Marvix AI</span>
+                  <span class="tag">Ambient Scribe</span>
+                  <span class="tag">LLMs</span>
+              </p>
+          </article>
+          <article class="post-card">
+<p class="tag-row"><span class="tag tag-category">Engineering</span></p>            <p class="post-meta">August 14, 2024 · 8 min read</p>
+            <h2><a href="/blog/making-llm-output-reliable/">Making LLM Output Reliable When the Stakes Are Real</a></h2>
+            <p>A demo only has to work once. A production system has to be trustworthy on the worst input it will ever see. The gap between those two is where most of the engineering actually lives — and where the lawsuits happen.</p>
+              <p class="tag-row">
+                  <span class="tag">LLMs</span>
+                  <span class="tag">Reliability</span>
+                  <span class="tag">Production AI</span>
+              </p>
+          </article>
+          <article class="post-card">
+<p class="tag-row"><span class="tag tag-category">Philosophy</span></p>            <p class="post-meta">March 11, 2024 · 2 min read</p>
             <h2><a href="/blog/it-takes-courage-but/">It Takes Courage, But...</a></h2>
             <p>Courage rewards action regardless of direction, which is why real goodness requires more than passive harmlessness. Strength matters because choosing rightly only means something when you could do otherwise.</p>
+              <p class="tag-row">
+                  <span class="tag">Courage</span>
+                  <span class="tag">Character</span>
+              </p>
           </article>
           <article class="post-card">
-            <p class="post-meta">February 11, 2024 · 4 min read</p>
+<p class="tag-row"><span class="tag tag-category">Notions</span></p>            <p class="post-meta">February 11, 2024 · 4 min read</p>
             <h2><a href="/blog/ideal-state-fallacy/">Ideal State Fallacy</a></h2>
             <p>The perfect time to begin or deliver never arrives. Waiting for ideal conditions often hides fear, while progress comes from acting before everything feels ready.</p>
+              <p class="tag-row">
+                  <span class="tag">Action</span>
+                  <span class="tag">Perfectionism</span>
+              </p>
           </article>
           <article class="post-card">
-            <p class="post-meta">August 21, 2023 · 3 min read</p>
+<p class="tag-row"><span class="tag tag-category">Notions</span></p>            <p class="post-meta">August 21, 2023 · 3 min read</p>
             <h2><a href="/blog/duality-of-mind/">Duality of Mind</a></h2>
             <p>The inner voice is a dialogue, not a monologue. One side urges action while the other looks for excuses, and discipline comes from learning which voice to follow.</p>
+              <p class="tag-row">
+                  <span class="tag">Discipline</span>
+                  <span class="tag">Self-mastery</span>
+              </p>
           </article>
           <article class="post-card">
-            <p class="post-meta">July 10, 2023 · 3 min read</p>
+<p class="tag-row"><span class="tag tag-category">Notions</span></p>            <p class="post-meta">July 10, 2023 · 3 min read</p>
             <h2><a href="/blog/finite-vs-infinite-games/">Finite vs Infinite Games</a></h2>
             <p>Life changes depending on whether you play for a fixed win or for continued growth. The infinite-game mindset turns meaning into a practice rather than an end state.</p>
+              <p class="tag-row">
+                  <span class="tag">Mindset</span>
+                  <span class="tag">Meaning</span>
+              </p>
           </article>
       </div>
+      <p class="post-filter-empty" hidden>No posts match that filter.</p>
     </div>
   </section>
+
+  <script>
+    // ponytail: filters the already-rendered cards on visible text; clicking a chip filters by it.
+    // Fuzzy: substring is the fast path; on a miss, fall back to per-word edit distance to tolerate typos.
+    (function () {
+      var input = document.getElementById('post-filter');
+      var stack = document.querySelector('.post-stack');
+      var empty = document.querySelector('.post-filter-empty');
+      var posts = stack.querySelectorAll('.post-card');
+      function lev(a, b) {
+        var m = a.length, n = b.length, row = [], i, j;
+        for (j = 0; j <= n; j++) row[j] = j;
+        for (i = 1; i <= m; i++) {
+          var prev = row[0]; row[0] = i;
+          for (j = 1; j <= n; j++) {
+            var tmp = row[j];
+            row[j] = Math.min(row[j] + 1, row[j - 1] + 1, prev + (a[i - 1] === b[j - 1] ? 0 : 1));
+            prev = tmp;
+          }
+        }
+        return row[n];
+      }
+      function matches(token, words) {
+        var budget = token.length <= 4 ? 1 : 2;
+        for (var i = 0; i < words.length; i++) {
+          if (words[i].indexOf(token) !== -1) return true;
+          if (Math.abs(words[i].length - token.length) <= budget && lev(token, words[i]) <= budget) return true;
+        }
+        return false;
+      }
+      function apply(q) {
+        q = q.trim().toLowerCase();
+        var text, words, tokens = q ? q.split(/\s+/) : [];
+        var shown = 0;
+        posts.forEach(function (el) {
+          text = el.textContent.toLowerCase();
+          var hide = false;
+          if (q && text.indexOf(q) === -1) {
+            words = text.split(/[^a-z0-9]+/);
+            hide = !tokens.every(function (t) { return matches(t, words); });
+          }
+          el.hidden = hide;
+          if (!hide) shown++;
+        });
+        empty.hidden = shown !== 0;
+      }
+      input.addEventListener('input', function () { apply(this.value); });
+      stack.addEventListener('click', function (e) {
+        var tag = e.target.closest('.tag');
+        if (!tag) return;
+        input.value = tag.textContent.trim();
+        apply(input.value);
+        input.scrollIntoView({ block: 'nearest' });
+      });
+    })();
+  </script>
     </main>
 
     <footer class="site-footer">

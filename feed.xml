@@ -77,6 +77,88 @@
 <p>Work hard and enjoy the limited time you have. Take a chill pill.</p>]]></content:encoded>
   </item>
   <item>
+    <title>Marvix AI: Building an Ambient Scribe from Scratch</title>
+    <link>https://karanjakhar.net/blog/marvix-ai-ambient-scribe/</link>
+    <guid>https://karanjakhar.net/blog/marvix-ai-ambient-scribe/</guid>
+    <pubDate>Tue, 03 Sep 2024 00:00:00 -0000</pubDate>
+    <description>What I&#x27;m building at Marvix AI — an ambient scribe that listens, understands, and writes so people don&#x27;t have to — and what it takes to make AI dependable enough to disappear into someone&#x27;s workflow.</description>
+    <content:encoded><![CDATA[<h1 id="building-an-ambient-scribe">Building an Ambient Scribe</h1>
+<p>I&rsquo;m the founding engineer at <a href="https://marvix.ai">Marvix AI</a>, where we&rsquo;re building an ambient scribe: software that quietly listens to a conversation and turns it into accurate, structured notes, so the people in the room can stay in the room instead of typing.</p>
+<p>I joined when the repository was empty. Since then I&rsquo;ve owned the parts that turn a promising demo into something people can actually depend on — the language-model pipeline that does the understanding, the retrieval layer that grounds it in real context, and the backend that has to be fast and correct every single time, not just when someone is watching.</p>
+<h2 id="what-ambient-actually-demands">What &ldquo;ambient&rdquo; actually demands</h2>
+<p>The word <em>ambient</em> hides how hard the problem is. To disappear into someone&rsquo;s workflow, the system has to clear a bar that a flashy demo never has to:</p>
+<ul>
+<li><strong>It has to be trusted.</strong> The output is read as truth and acted on. &ldquo;Usually right&rdquo; isn&rsquo;t good enough when a person stops double-checking.</li>
+<li><strong>It has to be fast.</strong> Ambient means nobody waits for it. The work happens at the speed of the conversation, not after it.</li>
+<li><strong>It has to fail honestly.</strong> When the system isn&rsquo;t sure, it has to say so, instead of smoothing over the gap with a confident guess.</li>
+</ul>
+<p>Most of the engineering lives in those three constraints, not in the model itself. The model is the easy part now. Making its output dependable — constrained, verified, and honest about its own uncertainty — is the actual work. (I wrote more about that craft in <a href="/blog/making-llm-output-reliable/">Making LLM Output Reliable When the Stakes Are Real</a>.)</p>
+<h2 id="what-ive-owned">What I&rsquo;ve owned</h2>
+<p>Building this from scratch has meant working across the whole stack rather than a slice of it:</p>
+<ul>
+<li>The <strong>LLM pipeline</strong> that listens, understands, and structures — and the evaluation harness that tells us when it&rsquo;s drifting.</li>
+<li>The <strong>retrieval layer</strong> that grounds the output in the right context so it isn&rsquo;t guessing.</li>
+<li>The <strong>production backend</strong> — the APIs, the data flow, the system design that keeps it reliable under real-world load.</li>
+</ul>
+<p>Taking a product from an empty repo to something people rely on teaches you things that no individual ticket does: where the system breaks under real input, what reliability actually costs, and which corners you can never cut. That&rsquo;s the part of this work I care about most.</p>
+<hr>
+<p><em>If you&rsquo;re working on something in this space, or just want to compare notes on building dependable AI systems, I&rsquo;d genuinely enjoy the conversation — <a href="/#contact">reach out</a>.</em></p>]]></content:encoded>
+  </item>
+  <item>
+    <title>Making LLM Output Reliable When the Stakes Are Real</title>
+    <link>https://karanjakhar.net/blog/making-llm-output-reliable/</link>
+    <guid>https://karanjakhar.net/blog/making-llm-output-reliable/</guid>
+    <pubDate>Wed, 14 Aug 2024 00:00:00 -0000</pubDate>
+    <description>A demo only has to work once. A production system has to be trustworthy on the worst input it will ever see. The gap between those two is where most of the engineering actually lives — and where the lawsuits happen.</description>
+    <content:encoded><![CDATA[<h1 id="the-gap-between-a-demo-and-a-system">The Gap Between a Demo and a System</h1>
+<p>In November 2022, a man named Jake Moffatt asked Air Canada&rsquo;s website chatbot about bereavement fares after his grandmother died. The bot told him he could buy a full-price ticket and apply for the discount retroactively within 90 days. That policy did not exist. When Air Canada refused the refund, Moffatt took them to the British Columbia Civil Resolution Tribunal — and in February 2024, <a href="https://www.americanbar.org/groups/business_law/resources/business-law-today/2024-february/bc-tribunal-confirms-companies-remain-liable-information-provided-ai-chatbot/">the tribunal ruled against the airline</a>. Air Canada had argued, remarkably, that the chatbot was &ldquo;a separate legal entity responsible for its own actions.&rdquo; The tribunal disagreed and ordered the company to pay.</p>
+<p>The damages were small — about CA$812. The lesson is not. A demo only has to work once: you pick the input, you run it, and if it looks good you stop. A production system has the opposite job. It has to be trustworthy on the worst input it will ever see, on a day you are not watching, for a user who will believe whatever it says and act on it.</p>
+<p>Most of the difficulty in building with language models lives in that gap. The model is the easy part now — you can have something that sounds intelligent in an afternoon. The hard part is the part nobody films: making the output reliable enough that a person can act on it without checking your work, because a lot of the time they won&rsquo;t check.</p>
+<p>When the stakes are low, you can let the model be wrong sometimes. A wrong autocomplete costs a keystroke. But the moment a human reads the output as truth and does something because of it — books a fare, files a brief, signs off on a note — &ldquo;usually correct&rdquo; stops being a virtue. Usually correct is just a failure you haven&rsquo;t met yet.</p>
+<h2 id="reliability-is-not-a-bigger-model">Reliability Is Not a Bigger Model</h2>
+<p>The instinct when output is unreliable is to reach for a better model. Sometimes that helps. More often it hides the problem: the failures get rarer, so they get harder to see, so you trust the system more right as it becomes more dangerous. A 95% system fails loudly enough that you stay alert. A 99.5% system lulls you to sleep and then fails on the case you stopped watching for.</p>
+<p>Reliability is not a property of the model. It is a property of the <em>system around</em> the model — the constraints you put on what it can say, the checks you run on what it did say, and the honesty with which you handle the cases where you simply don&rsquo;t know.</p>
+<p>I think about it in three moves: <strong>constrain the output, verify it, and make uncertainty visible.</strong></p>
+<h2 id="constrain-before-you-generate">Constrain Before You Generate</h2>
+<p>The cheapest failure to prevent is the one the model is never allowed to make. Free-form text is the hardest thing to trust, because anything is a valid string. The more structure you can impose, the smaller the space of ways to be wrong.</p>
+<p>This isn&rsquo;t theoretical. When OpenAI shipped <a href="https://openai.com/index/introducing-structured-outputs-in-the-api/">Structured Outputs</a> in August 2024 — constraining generation to a supplied JSON schema during decoding — they reported it scored <strong>100% on their schema-compliance evals, up from under 40%</strong> for an older model relying on prompting alone. The model didn&rsquo;t get smarter about the task. The output space got smaller, so a whole class of malformed-response failures simply stopped being possible.</p>
+<p>You can lean on the same idea wherever you generate. Ask for a schema the result must conform to, and validate it before you trust it:</p>
+<div class="codehilite"><pre><span></span><code><span class="kn">from</span><span class="w"> </span><span class="nn">pydantic</span><span class="w"> </span><span class="kn">import</span> <span class="n">BaseModel</span><span class="p">,</span> <span class="n">ValidationError</span>
+
+<span class="k">class</span><span class="w"> </span><span class="nc">Extraction</span><span class="p">(</span><span class="n">BaseModel</span><span class="p">):</span>
+    <span class="n">summary</span><span class="p">:</span> <span class="nb">str</span>
+    <span class="n">amount_due</span><span class="p">:</span> <span class="nb">float</span>
+    <span class="n">due_date</span><span class="p">:</span> <span class="nb">str</span>  <span class="c1"># ISO 8601</span>
+
+<span class="k">def</span><span class="w"> </span><span class="nf">extract</span><span class="p">(</span><span class="n">document</span><span class="p">:</span> <span class="nb">str</span><span class="p">)</span> <span class="o">-&gt;</span> <span class="n">Extraction</span> <span class="o">|</span> <span class="kc">None</span><span class="p">:</span>
+    <span class="n">raw</span> <span class="o">=</span> <span class="n">model</span><span class="o">.</span><span class="n">generate</span><span class="p">(</span><span class="n">prompt</span><span class="p">(</span><span class="n">document</span><span class="p">),</span> <span class="n">schema</span><span class="o">=</span><span class="n">Extraction</span><span class="o">.</span><span class="n">model_json_schema</span><span class="p">())</span>
+    <span class="k">try</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">Extraction</span><span class="o">.</span><span class="n">model_validate_json</span><span class="p">(</span><span class="n">raw</span><span class="p">)</span>
+    <span class="k">except</span> <span class="n">ValidationError</span><span class="p">:</span>
+        <span class="k">return</span> <span class="kc">None</span>  <span class="c1"># a caught failure beats a confident wrong answer</span>
+</code></pre></div>
+
+<p>This does not make the model smarter. It makes the failure <em>legible</em>. A malformed answer becomes a <code>None</code> you can route to a fallback, a retry, or a human — instead of a plausible-looking field that quietly carries a hallucination downstream. Legible failure is worth more than rare failure, because you can build on it.</p>
+<h2 id="verify-what-the-model-claims">Verify What the Model Claims</h2>
+<p>The deepest source of unreliability is that a language model has no idea whether it is right. It produces the most likely continuation, and &ldquo;likely&rdquo; and &ldquo;true&rdquo; are correlated but not the same.</p>
+<p>The sharpest illustration I know is <em>Mata v. Avianca</em>. In 2023, a New York lawyer named Steven Schwartz used ChatGPT to research a brief, and it produced six cases — names, citations, procedural histories, quoted passages. All fabricated. Here is the part that matters for engineers: when Schwartz got nervous, <a href="https://en.wikipedia.org/wiki/Mata_v._Avianca,_Inc.">he asked ChatGPT whether the cases were real</a>. It said yes. He asked the unreliable system to verify itself, and it confidently confirmed its own fiction. Judge Castel sanctioned the lawyers $5,000 and made them notify every real judge they&rsquo;d falsely cited.</p>
+<p>That is the whole lesson in one anecdote: <strong>you cannot ask the model to be correct, and you cannot ask it to confirm that it was.</strong> You have to check it against something the model doesn&rsquo;t control. The most useful checks are grounded outside the model:</p>
+<ul>
+<li><strong>Source grounding.</strong> If the output is supposed to come from a document, every claim should be traceable to a span of that document. A claim with no source is a guess wearing a fact&rsquo;s clothing. (Schwartz&rsquo;s six cases had no real source — a citation that resolves to nothing should have been a hard failure, not a footnote.)</li>
+<li><strong>Cross-checks.</strong> Numbers should add up. Dates should be ordered. Entities mentioned in the conclusion should appear in the input. These are cheap, deterministic, and catch a surprising amount.</li>
+<li><strong>Adversarial reading.</strong> A second pass — sometimes a second model — whose only job is to try to <em>falsify</em> the first answer. Not &ldquo;is this good?&rdquo; but &ldquo;find what&rsquo;s wrong with this.&rdquo; Generation and criticism are different tasks, and asking for criticism directly catches errors that a satisfied generator never will.</li>
+</ul>
+<p>None of this is glamorous. It is the boring scaffolding around the clever part. But the boring scaffolding is what lets a person trust the clever part without re-doing its work.</p>
+<h2 id="make-uncertainty-visible">Make Uncertainty Visible</h2>
+<p>The failure I respect most is the one a system admits to. A system that says &ldquo;I&rsquo;m not sure about this part&rdquo; is more trustworthy than one that is confidently wrong, even if the confident one is right more often — because the honest one lets the human spend their attention where it&rsquo;s needed.</p>
+<p>This is mostly a design decision, not a modeling one. When a check fails, when sources are thin, when the model contradicts itself across passes — surface it. Flag the field. Route it for review. Don&rsquo;t average the uncertainty away into a clean-looking answer that hides where the soft spots are. Air Canada&rsquo;s bot didn&rsquo;t say &ldquo;I&rsquo;m not certain about this policy — please confirm.&rdquo; It stated a refund rule with total confidence. The confidence was the failure.</p>
+<p>There is a quiet arrogance in a system that never says &ldquo;I don&rsquo;t know.&rdquo; Real expertise includes knowing the edges of what you know. We should hold our systems to the standard we&rsquo;d hold a good colleague to: not flawless, but honest about where they&rsquo;re shaky.</p>
+<h2 id="reliability-is-a-discipline-not-a-feature">Reliability Is a Discipline, Not a Feature</h2>
+<p>You don&rsquo;t add reliability at the end. There&rsquo;s no flag to turn it on. It is the accumulated result of a hundred decisions about what the system is allowed to say, what you check before you believe it, and what you do when you&rsquo;re not sure — made every time, especially when it would be easier not to.</p>
+<p>That, to me, is where engineering and character turn out to be the same thing. The discipline of building a trustworthy system is the discipline of being trustworthy yourself: doing the unglamorous work that no one sees, refusing to pass off a guess as a fact, and being honest about the limits of what you know.</p>
+<p>A demo asks: does it work? A system asks: can someone <em>trust</em> it, on the worst day, when no one is watching? Air Canada&rsquo;s chatbot worked in the demo. It failed the only question that mattered. Building for that question is harder, slower, and less impressive in the room — and it is the only kind of building that matters once something real depends on the answer.</p>]]></content:encoded>
+  </item>
+  <item>
     <title>It Takes Courage, But...</title>
     <link>https://karanjakhar.net/blog/it-takes-courage-but/</link>
     <guid>https://karanjakhar.net/blog/it-takes-courage-but/</guid>

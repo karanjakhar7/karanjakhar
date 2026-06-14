@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>Marvix AI: Building an Ambient Scribe from Scratch | karanjakhar.net</title>
+  <meta name="description" content="What I&#39;m building at Marvix AI — an ambient scribe that listens, understands, and writes so people don&#39;t have to — and what it takes to make AI dependable enough to disappear into someone&#39;s workflow.">
+  <meta name="author" content="Karan Jakhar">
+  <link rel="canonical" href="https://karanjakhar.net/blog/marvix-ai-ambient-scribe/">
+  <meta property="og:title" content="Marvix AI: Building an Ambient Scribe from Scratch | karanjakhar.net">
+  <meta property="og:description" content="What I&#39;m building at Marvix AI — an ambient scribe that listens, understands, and writes so people don&#39;t have to — and what it takes to make AI dependable enough to disappear into someone&#39;s workflow.">
+  <meta property="og:url" content="https://karanjakhar.net/blog/marvix-ai-ambient-scribe/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="karanjakhar.net">
+  <meta property="og:image" content="https://karanjakhar.net/assets/hero/background.jpg">
+  <meta property="article:published_time" content="2024-09-03">
+  <meta property="article:author" content="Karan Jakhar">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Marvix AI: Building an Ambient Scribe from Scratch | karanjakhar.net">
+  <meta name="twitter:description" content="What I&#39;m building at Marvix AI — an ambient scribe that listens, understands, and writes so people don&#39;t have to — and what it takes to make AI dependable enough to disappear into someone&#39;s workflow.">
+  <meta name="twitter:image" content="https://karanjakhar.net/assets/hero/background.jpg">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "Marvix AI: Building an Ambient Scribe from Scratch", "description": "What I'm building at Marvix AI \u2014 an ambient scribe that listens, understands, and writes so people don't have to \u2014 and what it takes to make AI dependable enough to disappear into someone's workflow.", "mainEntityOfPage": "https://karanjakhar.net/blog/marvix-ai-ambient-scribe/", "author": {"@type": "Person", "name": "Karan Jakhar", "url": "https://karanjakhar.net/", "sameAs": ["https://www.github.com/karanjakhar7", "https://www.linkedin.com/in/karanjakhar7"], "jobTitle": "Founding Engineer", "description": "Karan Jakhar is a Founding Engineer at Marvix AI, where he builds the company's AI ambient scribe. He works on large language models, retrieval pipelines, and the backend systems behind production AI products.", "knowsAbout": ["Artificial Intelligence", "AI Engineering", "Large Language Models", "Ambient Scribe", "Ambient Clinical Documentation", "Retrieval-Augmented Generation", "Backend Infrastructure"], "worksFor": {"@type": "Organization", "name": "Marvix AI", "url": "https://marvix.ai"}}, "datePublished": "2024-09-03", "image": "https://karanjakhar.net/assets/hero/background.jpg"}</script>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="karanjakhar.net Feed" href="/feed.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/pygments.css">
+</head>
+<body class="blog-post-page">
+  <canvas id="site-bg" aria-hidden="true"></canvas>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">karanjakhar.net</a>
+        <nav class="site-nav" aria-label="Primary">
+            <a
+              href="/"
+            >Home</a>
+            <a
+              href="/#about"
+            >About</a>
+            <a
+              href="/#contact"
+            >Contact</a>
+            <a
+              href="/blog/"
+            >Blog</a>
+            <a
+              href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp"
+target="_blank" rel="noreferrer"            >Resume</a>
+        </nav>
+        <button type="button" id="void-toggle" class="void-toggle" aria-label="Darker mode">darker</button>
+      </div>
+    </header>
+
+    <main>
+  <article class="section article-shell">
+    <div class="container narrow">
+      <p class="section-label"><a class="text-link" href="/blog/">Back to blog</a></p>
+      <header class="article-header">
+<p class="tag-row"><span class="tag tag-category">Work</span></p>        <h1>Marvix AI: Building an Ambient Scribe from Scratch</h1>
+        <p class="post-meta">September 3, 2024 · 3 min read</p>
+          <p class="tag-row">
+              <span class="tag">Marvix AI</span>
+              <span class="tag">Ambient Scribe</span>
+              <span class="tag">LLMs</span>
+          </p>
+      </header>
+      <div class="article-body"><h1 id="building-an-ambient-scribe">Building an Ambient Scribe</h1>
+<p>I&rsquo;m the founding engineer at <a href="https://marvix.ai">Marvix AI</a>, where we&rsquo;re building an ambient scribe: software that quietly listens to a conversation and turns it into accurate, structured notes, so the people in the room can stay in the room instead of typing.</p>
+<p>I joined when the repository was empty. Since then I&rsquo;ve owned the parts that turn a promising demo into something people can actually depend on — the language-model pipeline that does the understanding, the retrieval layer that grounds it in real context, and the backend that has to be fast and correct every single time, not just when someone is watching.</p>
+<h2 id="what-ambient-actually-demands">What &ldquo;ambient&rdquo; actually demands</h2>
+<p>The word <em>ambient</em> hides how hard the problem is. To disappear into someone&rsquo;s workflow, the system has to clear a bar that a flashy demo never has to:</p>
+<ul>
+<li><strong>It has to be trusted.</strong> The output is read as truth and acted on. &ldquo;Usually right&rdquo; isn&rsquo;t good enough when a person stops double-checking.</li>
+<li><strong>It has to be fast.</strong> Ambient means nobody waits for it. The work happens at the speed of the conversation, not after it.</li>
+<li><strong>It has to fail honestly.</strong> When the system isn&rsquo;t sure, it has to say so, instead of smoothing over the gap with a confident guess.</li>
+</ul>
+<p>Most of the engineering lives in those three constraints, not in the model itself. The model is the easy part now. Making its output dependable — constrained, verified, and honest about its own uncertainty — is the actual work. (I wrote more about that craft in <a href="/blog/making-llm-output-reliable/">Making LLM Output Reliable When the Stakes Are Real</a>.)</p>
+<h2 id="what-ive-owned">What I&rsquo;ve owned</h2>
+<p>Building this from scratch has meant working across the whole stack rather than a slice of it:</p>
+<ul>
+<li>The <strong>LLM pipeline</strong> that listens, understands, and structures — and the evaluation harness that tells us when it&rsquo;s drifting.</li>
+<li>The <strong>retrieval layer</strong> that grounds the output in the right context so it isn&rsquo;t guessing.</li>
+<li>The <strong>production backend</strong> — the APIs, the data flow, the system design that keeps it reliable under real-world load.</li>
+</ul>
+<p>Taking a product from an empty repo to something people rely on teaches you things that no individual ticket does: where the system breaks under real input, what reliability actually costs, and which corners you can never cut. That&rsquo;s the part of this work I care about most.</p>
+<hr>
+<p><em>If you&rsquo;re working on something in this space, or just want to compare notes on building dependable AI systems, I&rsquo;d genuinely enjoy the conversation — <a href="/#contact">reach out</a>.</em></p></div>
+      <div class="contact-panel article-cta">
+        <div class="contact-copy">
+          <p class="section-label">Let's talk</p>
+          <h2>Building something at the edge of AI?</h2>
+        </div>
+        <div class="contact-actions">
+            <a class="button button-secondary-light" href="mailto:kjakhar4321@gmail.com">Email me</a>
+            <a class="button button-secondary-light" href="https://www.linkedin.com/in/karanjakhar7" rel="noreferrer" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <p class="footer-title">Karan Jakhar</p>
+          <p class="footer-copy">Writing about technology, systems, and ideas.</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://www.github.com/karanjakhar7" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/karanjakhar7" rel="noreferrer">LinkedIn</a>
+            <a href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp" rel="noreferrer" target="_blank">Resume</a>
+            <a href="mailto:kjakhar4321@gmail.com">Email</a>
+          <a href="/feed.xml">RSS</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <p>&copy; 2026 Karan Jakhar</p>
+      </div>
+    </footer>
+  </div>
+  <script src="/static/hero-constellation.js" defer></script>
+</body>
+</html>
