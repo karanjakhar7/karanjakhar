@@ -256,6 +256,15 @@ img {
   text-align: center;
 }
 
+.about-portrait {
+  width: 160px;
+  height: 160px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 1.5rem;
+  display: block;
+}
+
 .about-copy .section-richtext {
   text-align: left;
 }

@@ -22,6 +22,9 @@
 
   <section class="section section-muted home-section-anchor" id="about">
     <div class="container about-grid">
+      {% if about.image %}
+      <img class="about-portrait" src="{{ about.image }}" alt="{{ site.author }}" width="160" height="160" loading="lazy">
+      {% endif %}
       <div class="about-copy">
         <p class="section-label">About</p>
         <h2>Thinking from first principles, then shipping what works.</h2>
