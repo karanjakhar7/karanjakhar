@@ -114,7 +114,7 @@ img {
 }
 
 .hero {
-  padding: 4rem 0 1rem;
+  padding: 3rem 0 1rem;
 }
 
 /* No animated background while reading — keep blog posts distraction-free.
@@ -232,8 +232,15 @@ img {
   border-color: var(--ink);
 }
 
+/* Resume is the quietest CTA — dimmer border + text than the others
+   (creator vibe, not job-seeker). Same on web and mobile. */
+.hero-resume {
+  border-color: var(--accent-quote);
+  color: var(--ink-soft);
+}
+
 .section {
-  padding: 4.5rem 0;
+  padding: 3.5rem 0;
 }
 
 .home-section-anchor {
@@ -310,22 +317,23 @@ img {
 
 .post-stack {
   display: grid;
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .post-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
-  gap: 1.2rem;
+  gap: 1rem;
 }
 
 .post-stack-footer {
   margin-top: 1.75rem;
+  text-align: center;
 }
 
 .post-card,
 .not-found-card {
-  padding: 1.5rem 1.6rem;
+  padding: 1.15rem 1.3rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
   background: var(--surface);
@@ -391,9 +399,22 @@ a.post-card:hover {
 
 .post-card h2,
 .post-card h3 {
-  margin: 0.25rem 0 0.5rem;
+  margin: 0.2rem 0 0.4rem;
   font-family: var(--serif);
   font-size: clamp(1.5rem, 2vw, 2rem);
+}
+
+.post-card p {
+  margin: 0.4rem 0;
+}
+
+/* clamp the summary (the only unclassed <p> in a card) so long text
+   doesn't make cards uneven; full text is on the post page. */
+.post-card p:not([class]) {
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .post-card a:hover,
@@ -726,8 +747,41 @@ a.post-card:hover {
 }
 
 @media (max-width: 640px) {
+  /* tighten the vertical rhythm so the About headshot isn't buried below
+     a tall hero + full section of padding. */
   .hero {
-    padding: 4rem 0 3rem;
+    padding: 1rem 0 0.75rem;
+  }
+
+  .hero-inner {
+    padding: 0;
+  }
+
+  .hero-text {
+    margin-top: 0.9rem;
+  }
+
+  .hero .hero-actions {
+    margin-top: 1.25rem;
+  }
+
+  /* CTAs meet the 44px touch-target guideline */
+  .button {
+    min-height: 44px;
+  }
+
+  /* two CTAs share one row as equal halves; trimmed padding/font keeps the
+     longer label on a single line on narrow phones */
+  .hero-actions .button {
+    flex: 1 1 0;
+    padding: 0.625rem 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  /* Resume is already in the top nav — drop the redundant hero button on
+     mobile to save a full row and lift the headshot. */
+  .hero-actions .hero-resume {
+    display: none;
   }
 
   /* narrow screens: the cloud is compact and sits right under the text, so the
@@ -739,11 +793,29 @@ a.post-card:hover {
   }
 
   .section {
-    padding: 4rem 0;
+    padding: 1.75rem 0;
+  }
+
+  .section-heading {
+    margin-bottom: 1.25rem;
+  }
+
+  .section-richtext {
+    font-size: 1rem;
   }
 
   .post-card,
   .not-found-card {
-    padding: 1.25rem;
+    padding: 1rem 1.1rem;
+  }
+
+  .post-card p:not([class]) {
+    -webkit-line-clamp: 2;
+  }
+
+  /* desktop fills a 4-card row; phones (single column) drop the 4th to
+     keep the homepage short. */
+  .post-grid-recent > :nth-child(n+4) {
+    display: none;
   }
 }
