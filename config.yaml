@@ -33,8 +33,8 @@ person:
   company_linkedin: ""      # LinkedIn company page URL
   company_crunchbase: ""    # Crunchbase URL
   twitter: ""               # personal X/Twitter profile URL
-  headline: "Karan Jakhar — AI Engineer & Writer"
-  bio: "Karan Jakhar is a Founding Engineer at Marvix AI, where he builds the company's AI ambient scribe. He works on large language models, retrieval pipelines, and the backend systems behind production AI products."
+  headline: "Karan Jakhar — Builds AI products from zero and writes"
+  bio: "Karan Jakhar is the Founding Engineer at Marvix AI, where he builds the company's AI ambient scribe. He works on large language models, retrieval pipelines, and the backend systems behind production AI products."
   knows_about:
     - "Artificial Intelligence"
     - "AI Engineering"
@@ -43,6 +43,8 @@ person:
     - "Ambient Clinical Documentation"
     - "Retrieval-Augmented Generation"
     - "Backend Infrastructure"
+    - "Machine Learning"
+    - "System Design"
 
 resume:
   url: "https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp"
