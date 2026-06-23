@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>adgen: From a One-Line Brief to a Ranked Ad Campaign | Karan Jakhar</title>
+  <meta name="description" content="A system I built that turns a one-sentence business description into ranked publisher recommendations, persona-tuned ad creative, and a structured campaign config — and is honest enough to recommend nothing when the fit isn&#39;t there.">
+  <meta name="author" content="Karan Jakhar">
+  <link rel="canonical" href="https://karanjakhar.net/blog/adgen/">
+  <meta property="og:title" content="adgen: From a One-Line Brief to a Ranked Ad Campaign | Karan Jakhar">
+  <meta property="og:description" content="A system I built that turns a one-sentence business description into ranked publisher recommendations, persona-tuned ad creative, and a structured campaign config — and is honest enough to recommend nothing when the fit isn&#39;t there.">
+  <meta property="og:url" content="https://karanjakhar.net/blog/adgen/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Karan Jakhar">
+  <meta property="og:image" content="https://karanjakhar.net/assets/hero/background.jpg">
+  <meta property="article:published_time" content="2026-06-24">
+  <meta property="article:author" content="Karan Jakhar">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="adgen: From a One-Line Brief to a Ranked Ad Campaign | Karan Jakhar">
+  <meta name="twitter:description" content="A system I built that turns a one-sentence business description into ranked publisher recommendations, persona-tuned ad creative, and a structured campaign config — and is honest enough to recommend nothing when the fit isn&#39;t there.">
+  <meta name="twitter:image" content="https://karanjakhar.net/assets/hero/background.jpg">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "adgen: From a One-Line Brief to a Ranked Ad Campaign", "description": "A system I built that turns a one-sentence business description into ranked publisher recommendations, persona-tuned ad creative, and a structured campaign config \u2014 and is honest enough to recommend nothing when the fit isn't there.", "mainEntityOfPage": "https://karanjakhar.net/blog/adgen/", "author": {"@type": "Person", "name": "Karan Jakhar", "url": "https://karanjakhar.net/", "sameAs": ["https://www.github.com/karanjakhar7", "https://www.linkedin.com/in/karanjakhar7"], "jobTitle": "Founding Engineer", "description": "Karan Jakhar is the Founding Engineer at Marvix AI, where he builds the company's AI ambient scribe. He works on large language models, retrieval pipelines, and the backend systems behind production AI products.", "knowsAbout": ["Artificial Intelligence", "AI Engineering", "Large Language Models", "Ambient Scribe", "Ambient Clinical Documentation", "Retrieval-Augmented Generation", "Backend Infrastructure", "Machine Learning", "System Design"], "worksFor": {"@type": "Organization", "name": "Marvix AI", "url": "https://marvix.ai"}}, "datePublished": "2026-06-24", "image": "https://karanjakhar.net/assets/hero/background.jpg"}</script>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="Karan Jakhar Feed" href="/feed.xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
+  <link rel="stylesheet" href="/static/style.css">
+  <link rel="stylesheet" href="/static/pygments.css">
+</head>
+<body class="blog-post-page">
+  <canvas id="site-bg" aria-hidden="true"></canvas>
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">Karan Jakhar</a>
+        <nav class="site-nav" aria-label="Primary">
+            <a
+              href="/"
+            >Home</a>
+            <a
+              href="/#about"
+            >About</a>
+            <a
+              href="/#contact"
+            >Contact</a>
+            <a
+              href="/blog/"
+            >Blog</a>
+            <a
+              href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp"
+target="_blank" rel="noreferrer"            >Resume</a>
+        </nav>
+        <button type="button" id="void-toggle" class="void-toggle" aria-label="Darker mode">darker</button>
+      </div>
+    </header>
+
+    <main>
+  <article class="section article-shell">
+    <div class="container narrow">
+      <p class="section-label"><a class="text-link" href="/blog/">Back to blog</a></p>
+      <header class="article-header">
+<p class="tag-row"><span class="tag tag-category">Work</span></p>        <h1>adgen: From a One-Line Brief to a Ranked Ad Campaign</h1>
+        <p class="post-meta">June 24, 2026 · 4 min read</p>
+          <p class="tag-row">
+              <span class="tag">LLMs</span>
+              <span class="tag">Ad Tech</span>
+              <span class="tag">Pipelines</span>
+          </p>
+      </header>
+      <div class="article-body"><h1 id="adgen">adgen</h1>
+<p><strong>adgen</strong> is a system I built that takes a single sentence about a business — <em>&ldquo;We sell premium dog food for senior dogs, for owners who care about joint health&rdquo;</em> — and turns it into a working ad campaign: a ranked list of publishers to run on, three to five ad variants written for specific audience personas, and a structured campaign config with budget allocation, targeting, and bid strategy.</p>
+<p>Advertisers usually wrestle with three tangled questions at once: <em>where</em> to run, <em>what</em> copy will actually land, and <em>how</em> to structure the whole thing into something a campaign tool can ingest. adgen answers all three from one line of input, against a catalog of publishers and personas the user supplies (or the bundled sample data).</p>
+<ul>
+<li><strong>Live demo:</strong> <a href="https://adgen-puce.vercel.app">adgen-puce.vercel.app</a></li>
+<li><strong>Code:</strong> <a href="https://github.com/karanjakhar7/adgen">github.com/karanjakhar7/adgen</a></li>
+</ul>
+<h2 id="code-does-math-the-model-does-judgment">Code does math, the model does judgment</h2>
+<p>The cleanest decision in the whole system was deciding what the language model is <em>not</em> allowed to do. Anything mechanical — AOV ratios, demographic overlap, category matching, budget arithmetic, serializing the final config — is deterministic, testable code. The model is reserved for the things only it can do: reading a messy human brief, judging qualitative fit, and writing copy.</p>
+<p>Ranking is where this pays off. Instead of a pure weighted formula or a pure &ldquo;ask the LLM to rank everything,&rdquo; it&rsquo;s a hybrid: code precomputes the hard signals, then the model scores each publisher in <code>[0,1]</code> using those signals <em>plus</em> the publisher&rsquo;s qualitative notes, and explains itself. One publisher&rsquo;s note says its &ldquo;playful, impulse-driven voice converts best&rdquo; — for a clinical, premium senior-dog-food brand that&rsquo;s a tone clash, and the model catches it where an embedding-similarity match never would. Every score ships with a <code>fit_reasons</code> field, so nothing is a black box.</p>
+<h2 id="a-pipeline-split-by-temperature">A pipeline split by temperature</h2>
+<p>adgen runs as six stages, and the reason they&rsquo;re separate calls is almost embarrassingly simple: different jobs want different temperatures. Ranking needs to be deterministic, so it runs at temperature ≈ 0. Creative needs variety, so it runs at ≈ 0.8. Once you split for that reason, everything else falls out for free — per-stage model routing, independent retries, and the ability to evaluate each stage on its own.</p>
+<p>The creative stage fans out across personas in parallel (<code>asyncio.gather</code>), generating one headline/body/CTA per persona. Each variant is conditioned on three things: the persona, a distinct single-minded message angle assigned upstream, and the <em>placement</em> — the same product gets pitched differently on a $28-AOV late-night impulse site than on an affluent, considered one.</p>
+<h2 id="honest-about-bad-fit">Honest about bad fit</h2>
+<p>The part I&rsquo;m most proud of is what adgen does when the answer is &ldquo;no.&rdquo; Most systems force-fit a recommendation. adgen can recommend <em>zero</em> publishers if the catalog genuinely doesn&rsquo;t suit the advertiser, flag a weak price-fit instead of pretending, gate off-topic briefs before they waste a pipeline run, and surface the assumptions it made rather than quietly inventing facts. Recommendations are threshold-based, not top-K, so a bad catalog produces an honest empty list — not a confidently wrong one. I <a href="/blog/making-llm-output-reliable/">wrote separately</a> about why that kind of honesty is the actual engineering, not a nicety.</p>
+<h2 id="the-stack">The stack</h2>
+<p>Python 3.12 with <code>asyncio</code>, <a href="https://fastapi.tiangolo.com/">FastAPI</a> serving a server-sent-events UI that streams progress stage by stage, <a href="https://docs.litellm.ai/">LiteLLM</a> so the model provider is pure config (swap Gemini for Claude with an env var), and <a href="https://docs.pydantic.dev/">Pydantic v2</a> as the typed contract between stages with a validate-and-repair loop. No database by design — the catalog fits in context, and per-run output is written to flat files. There&rsquo;s also an evaluation harness that checks the deterministic invariants (allocations sum to 100%, ceilings respected) and pits the LLM ranker against a trivial category-match baseline. Deployed on Vercel.</p>
+<hr>
+<p><em>If you&rsquo;re building generative systems that have to be trusted, not just demoed, I&rsquo;d enjoy comparing notes — <a href="/#contact">reach out</a>.</em></p></div>
+      <div class="contact-panel article-cta">
+        <div class="contact-copy">
+          <p class="section-label">Let's talk</p>
+          <h2>Building something at the edge of AI?</h2>
+        </div>
+        <div class="contact-actions">
+            <a class="button button-secondary-light" href="mailto:kjakhar4321@gmail.com">Email me</a>
+            <a class="button button-secondary-light" href="https://www.linkedin.com/in/karanjakhar7" rel="noreferrer" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <p class="footer-title">Karan Jakhar</p>
+          <p class="footer-copy">Writing about technology, systems, and ideas.</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://www.github.com/karanjakhar7" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/karanjakhar7" rel="noreferrer">LinkedIn</a>
+            <a href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp" rel="noreferrer" target="_blank">Resume</a>
+            <a href="mailto:kjakhar4321@gmail.com">Email</a>
+          <a href="/feed.xml">RSS</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <p>&copy; 2026 Karan Jakhar</p>
+      </div>
+    </footer>
+  </div>
+  <script src="/static/hero-constellation.js" defer></script>
+  <script src="/static/contact-net.js" defer></script>
+</body>
+</html>

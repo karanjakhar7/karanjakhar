@@ -4,7 +4,33 @@
     <title>Karan Jakhar</title>
     <link>https://karanjakhar.net</link>
     <description>I am an engineer working at the intersection of AI systems and real-world applications.</description>
-    <lastBuildDate>Sun, 14 Jun 2026 00:00:00 -0000</lastBuildDate>
+    <lastBuildDate>Wed, 24 Jun 2026 00:00:00 -0000</lastBuildDate>
+  <item>
+    <title>adgen: From a One-Line Brief to a Ranked Ad Campaign</title>
+    <link>https://karanjakhar.net/blog/adgen/</link>
+    <guid>https://karanjakhar.net/blog/adgen/</guid>
+    <pubDate>Wed, 24 Jun 2026 00:00:00 -0000</pubDate>
+    <description>A system I built that turns a one-sentence business description into ranked publisher recommendations, persona-tuned ad creative, and a structured campaign config — and is honest enough to recommend nothing when the fit isn&#x27;t there.</description>
+    <content:encoded><![CDATA[<h1 id="adgen">adgen</h1>
+<p><strong>adgen</strong> is a system I built that takes a single sentence about a business — <em>&ldquo;We sell premium dog food for senior dogs, for owners who care about joint health&rdquo;</em> — and turns it into a working ad campaign: a ranked list of publishers to run on, three to five ad variants written for specific audience personas, and a structured campaign config with budget allocation, targeting, and bid strategy.</p>
+<p>Advertisers usually wrestle with three tangled questions at once: <em>where</em> to run, <em>what</em> copy will actually land, and <em>how</em> to structure the whole thing into something a campaign tool can ingest. adgen answers all three from one line of input, against a catalog of publishers and personas the user supplies (or the bundled sample data).</p>
+<ul>
+<li><strong>Live demo:</strong> <a href="https://adgen-puce.vercel.app">adgen-puce.vercel.app</a></li>
+<li><strong>Code:</strong> <a href="https://github.com/karanjakhar7/adgen">github.com/karanjakhar7/adgen</a></li>
+</ul>
+<h2 id="code-does-math-the-model-does-judgment">Code does math, the model does judgment</h2>
+<p>The cleanest decision in the whole system was deciding what the language model is <em>not</em> allowed to do. Anything mechanical — AOV ratios, demographic overlap, category matching, budget arithmetic, serializing the final config — is deterministic, testable code. The model is reserved for the things only it can do: reading a messy human brief, judging qualitative fit, and writing copy.</p>
+<p>Ranking is where this pays off. Instead of a pure weighted formula or a pure &ldquo;ask the LLM to rank everything,&rdquo; it&rsquo;s a hybrid: code precomputes the hard signals, then the model scores each publisher in <code>[0,1]</code> using those signals <em>plus</em> the publisher&rsquo;s qualitative notes, and explains itself. One publisher&rsquo;s note says its &ldquo;playful, impulse-driven voice converts best&rdquo; — for a clinical, premium senior-dog-food brand that&rsquo;s a tone clash, and the model catches it where an embedding-similarity match never would. Every score ships with a <code>fit_reasons</code> field, so nothing is a black box.</p>
+<h2 id="a-pipeline-split-by-temperature">A pipeline split by temperature</h2>
+<p>adgen runs as six stages, and the reason they&rsquo;re separate calls is almost embarrassingly simple: different jobs want different temperatures. Ranking needs to be deterministic, so it runs at temperature ≈ 0. Creative needs variety, so it runs at ≈ 0.8. Once you split for that reason, everything else falls out for free — per-stage model routing, independent retries, and the ability to evaluate each stage on its own.</p>
+<p>The creative stage fans out across personas in parallel (<code>asyncio.gather</code>), generating one headline/body/CTA per persona. Each variant is conditioned on three things: the persona, a distinct single-minded message angle assigned upstream, and the <em>placement</em> — the same product gets pitched differently on a $28-AOV late-night impulse site than on an affluent, considered one.</p>
+<h2 id="honest-about-bad-fit">Honest about bad fit</h2>
+<p>The part I&rsquo;m most proud of is what adgen does when the answer is &ldquo;no.&rdquo; Most systems force-fit a recommendation. adgen can recommend <em>zero</em> publishers if the catalog genuinely doesn&rsquo;t suit the advertiser, flag a weak price-fit instead of pretending, gate off-topic briefs before they waste a pipeline run, and surface the assumptions it made rather than quietly inventing facts. Recommendations are threshold-based, not top-K, so a bad catalog produces an honest empty list — not a confidently wrong one. I <a href="/blog/making-llm-output-reliable/">wrote separately</a> about why that kind of honesty is the actual engineering, not a nicety.</p>
+<h2 id="the-stack">The stack</h2>
+<p>Python 3.12 with <code>asyncio</code>, <a href="https://fastapi.tiangolo.com/">FastAPI</a> serving a server-sent-events UI that streams progress stage by stage, <a href="https://docs.litellm.ai/">LiteLLM</a> so the model provider is pure config (swap Gemini for Claude with an env var), and <a href="https://docs.pydantic.dev/">Pydantic v2</a> as the typed contract between stages with a validate-and-repair loop. No database by design — the catalog fits in context, and per-run output is written to flat files. There&rsquo;s also an evaluation harness that checks the deterministic invariants (allocations sum to 100%, ceilings respected) and pits the LLM ranker against a trivial category-match baseline. Deployed on Vercel.</p>
+<hr>
+<p><em>If you&rsquo;re building generative systems that have to be trusted, not just demoed, I&rsquo;d enjoy comparing notes — <a href="/#contact">reach out</a>.</em></p>]]></content:encoded>
+  </item>
   <item>
     <title>Notes on Finding Your Own Way</title>
     <link>https://karanjakhar.net/blog/notes-on-finding-your-own-way/</link>

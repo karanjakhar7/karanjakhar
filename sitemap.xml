@@ -2,11 +2,15 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://karanjakhar.net/</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-24</lastmod>
   </url>
   <url>
     <loc>https://karanjakhar.net/blog/</loc>
-    <lastmod>2026-06-14</lastmod>
+    <lastmod>2026-06-24</lastmod>
+  </url>
+  <url>
+    <loc>https://karanjakhar.net/blog/adgen/</loc>
+    <lastmod>2026-06-24</lastmod>
   </url>
   <url>
     <loc>https://karanjakhar.net/blog/notes-on-finding-your-own-way/</loc>
