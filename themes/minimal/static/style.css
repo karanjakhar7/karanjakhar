@@ -333,6 +333,7 @@ img {
 
 .post-card,
 .not-found-card {
+  position: relative;
   padding: 1.15rem 1.3rem;
   border: 1px solid var(--line);
   border-radius: var(--radius-sm);
@@ -412,6 +413,7 @@ a.post-card:hover {
    doesn't make cards uneven; full text is on the post page. */
 .post-card p:not([class]) {
   display: -webkit-box;
+  line-clamp: 3;
   -webkit-line-clamp: 3;
   -webkit-box-orient: vertical;
   overflow: hidden;
@@ -438,6 +440,8 @@ a.post-card:hover {
 
 .tag {
   display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
   padding: 0.28rem 0.6rem;
   border-radius: var(--radius-sm);
   background: var(--surface-strong);
@@ -448,10 +452,37 @@ a.post-card:hover {
   letter-spacing: -0.011em;
 }
 
+.tag svg {
+  width: 0.78rem;
+  height: 0.78rem;
+  fill: currentColor;
+}
+
 .tag-category {
   background: transparent;
   color: var(--accent);
   border: 1px solid var(--accent);
+}
+
+.tag-pinned {
+  position: absolute;
+  top: 0;
+  right: 0;
+  z-index: 1;
+  justify-content: center;
+  width: 1.85rem;
+  height: 1.85rem;
+  padding: 0;
+  border-radius: 999px;
+  background: var(--accent-tint);
+  color: var(--accent);
+  border: 1px solid var(--accent-border);
+  transform: translate(35%, -35%);
+}
+
+.tag-pinned svg {
+  width: 0.9rem;
+  height: 0.9rem;
 }
 
 .post-filter {
@@ -810,6 +841,7 @@ a.post-card:hover {
   }
 
   .post-card p:not([class]) {
+    line-clamp: 2;
     -webkit-line-clamp: 2;
   }
 

@@ -63,6 +63,7 @@ class ContentItem:
     draft: bool
     html_body: str
     raw_body: str
+    pinned: bool = False
     date_value: date | None = None
     date_display: str | None = None
     reading_time: int | None = None
@@ -224,6 +225,7 @@ def load_content(directory: Path, content_type: str, include_drafts: bool) -> li
         summary = str(metadata.get("summary") or build_summary(body, fallback=title))
         tags = coerce_tags(metadata.get("tags"))
         category = str(metadata.get("category") or "").strip()
+        pinned = bool(metadata.get("pinned", False))
 
         if content_type == "post":
             item_date = parse_date(metadata.get("date"), path)
@@ -244,6 +246,7 @@ def load_content(directory: Path, content_type: str, include_drafts: bool) -> li
                 draft=draft,
                 html_body=html_body,
                 raw_body=body,
+                pinned=pinned,
                 date_value=item_date,
                 date_display=item_date.strftime("%B %-d, %Y") if os.name != "nt" else item_date.strftime("%B %#d, %Y"),
                 reading_time=reading_time_for_body(body),
@@ -276,6 +279,10 @@ def load_content(directory: Path, content_type: str, include_drafts: bool) -> li
         items.sort(key=lambda item: item.date_value or date.min, reverse=True)
 
     return items
+
+
+def sort_posts_for_display(posts: list[ContentItem]) -> list[ContentItem]:
+    return sorted(posts, key=lambda item: (item.pinned, item.date_value or date.min), reverse=True)
 
 
 def build_navigation(pages: list[ContentItem], config: dict[str, Any]) -> list[dict[str, Any]]:
@@ -522,6 +529,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     section_pages = [page for page in pages if page.slug in SECTION_PAGE_TARGETS]
     rendered_pages = [page for page in pages if page.slug not in SECTION_PAGE_TARGETS]
     tags = build_tag_map(posts)
+    display_posts = sort_posts_for_display(posts)
     global_context = {
         "site": config["site"],
         "social": config["social"],
@@ -611,11 +619,12 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         "/blog/",
         default_image,
     )
+    blog_context = {**global_context, "posts": display_posts}
     render_template(
         environment,
         "blog_index.html",
         output_dir / "blog/index.html",
-        **global_context,
+        **blog_context,
         page_title=blog_meta["title"],
         page_description=blog_meta["description"],
         canonical_url=blog_meta["canonical_url"],
@@ -633,8 +642,8 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     home_description = str(person_cfg.get("bio") or config["site"]["description"])
     home_meta = build_meta(config["site"], home_title, home_description, "/", default_image)
     # Posts in the "Work" category are surfaced as Selected Work; the rest are "latest writing".
-    work_posts = [p for p in posts if p.category.lower() == "work"]
-    recent_posts = [p for p in posts if p not in work_posts][:4]
+    work_posts = sort_posts_for_display([p for p in posts if p.category.lower() == "work"])
+    recent_posts = sort_posts_for_display([p for p in posts if p.category.lower() != "work"])[:4]
     render_template(
         environment,
         "index.html",

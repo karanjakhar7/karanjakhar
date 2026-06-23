@@ -4,6 +4,7 @@ date: 2024-09-03
 summary: "What I'm building at Marvix AI — an ambient scribe that listens, understands, and writes so people don't have to — and what it takes to make AI dependable enough to disappear into someone's workflow."
 tags: ["Marvix AI", "Ambient Scribe", "LLMs"]
 category: "Work"
+pinned: true
 draft: false
 ---
 
