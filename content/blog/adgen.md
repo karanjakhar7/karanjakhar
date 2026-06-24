@@ -1,6 +1,6 @@
 ---
 title: "adgen: From a One-Line Brief to a Ranked Ad Campaign"
-date: 2026-06-24
+date: 2026-06-15
 summary: "A system I built that turns a one-sentence business description into ranked publisher recommendations, persona-tuned ad creative, and a structured campaign config — and is honest enough to recommend nothing when the fit isn't there."
 tags: ["LLMs", "Ad Tech", "Pipelines"]
 category: "Work"
