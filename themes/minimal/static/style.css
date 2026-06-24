@@ -250,6 +250,10 @@ img {
   border-bottom: 1px solid var(--line-subtle);
 }
 
+.hero + .section-muted {
+  border-top: 0;
+}
+
 .about-grid {
   max-width: 680px;
   margin: 0 auto;
