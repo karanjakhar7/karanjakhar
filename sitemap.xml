@@ -2,15 +2,19 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://karanjakhar.net/</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-06-25</lastmod>
   </url>
   <url>
     <loc>https://karanjakhar.net/blog/</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-06-25</lastmod>
+  </url>
+  <url>
+    <loc>https://karanjakhar.net/blog/karenizer-i-spent-a-weekend-teaching-an-llm-to-be-unreasonable/</loc>
+    <lastmod>2026-06-25</lastmod>
   </url>
   <url>
     <loc>https://karanjakhar.net/blog/adgen/</loc>
-    <lastmod>2026-06-24</lastmod>
+    <lastmod>2026-06-15</lastmod>
   </url>
   <url>
     <loc>https://karanjakhar.net/blog/notes-on-finding-your-own-way/</loc>
@@ -19,6 +23,10 @@
   <url>
     <loc>https://karanjakhar.net/blog/empty-sacrifice/</loc>
     <lastmod>2025-01-13</lastmod>
+  </url>
+  <url>
+    <loc>https://karanjakhar.net/blog/synopso/</loc>
+    <lastmod>2024-12-01</lastmod>
   </url>
   <url>
     <loc>https://karanjakhar.net/blog/marvix-ai-ambient-scribe/</loc>

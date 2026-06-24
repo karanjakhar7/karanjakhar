@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="dark">
+  <title>synopso: A Daily AI Paper Briefing, Built as a Pipeline | Karan Jakhar</title>
+  <meta name="description" content="A pipeline I built that wakes up each morning, finds the day&#39;s most-discussed AI papers on HuggingFace, downloads and reads them, and delivers a Telegram briefing — without me lifting a finger.">
+  <meta name="author" content="Karan Jakhar">
+  <link rel="canonical" href="https://karanjakhar.net/blog/synopso/">
+  <meta property="og:title" content="synopso: A Daily AI Paper Briefing, Built as a Pipeline | Karan Jakhar">
+  <meta property="og:description" content="A pipeline I built that wakes up each morning, finds the day&#39;s most-discussed AI papers on HuggingFace, downloads and reads them, and delivers a Telegram briefing — without me lifting a finger.">
+  <meta property="og:url" content="https://karanjakhar.net/blog/synopso/">
+  <meta property="og:type" content="article">
+  <meta property="og:site_name" content="Karan Jakhar">
+  <meta property="og:image" content="https://karanjakhar.net/assets/hero/background.jpg">
+  <meta property="article:published_time" content="2024-12-01">
+  <meta property="article:author" content="Karan Jakhar">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="synopso: A Daily AI Paper Briefing, Built as a Pipeline | Karan Jakhar">
+  <meta name="twitter:description" content="A pipeline I built that wakes up each morning, finds the day&#39;s most-discussed AI papers on HuggingFace, downloads and reads them, and delivers a Telegram briefing — without me lifting a finger.">
+  <meta name="twitter:image" content="https://karanjakhar.net/assets/hero/background.jpg">
+  <script type="application/ld+json">{"@context": "https://schema.org", "@type": "BlogPosting", "headline": "synopso: A Daily AI Paper Briefing, Built as a Pipeline", "description": "A pipeline I built that wakes up each morning, finds the day's most-discussed AI papers on HuggingFace, downloads and reads them, and delivers a Telegram briefing \u2014 without me lifting a finger.", "mainEntityOfPage": "https://karanjakhar.net/blog/synopso/", "author": {"@type": "Person", "name": "Karan Jakhar", "url": "https://karanjakhar.net/", "sameAs": ["https://www.github.com/karanjakhar7", "https://www.linkedin.com/in/karanjakhar7"], "jobTitle": "Founding Engineer", "description": "Karan Jakhar is the Founding Engineer at Marvix AI, where he builds the company's AI ambient scribe. He works on large language models, retrieval pipelines, and the backend systems behind production AI products.", "knowsAbout": ["Artificial Intelligence", "AI Engineering", "Large Language Models", "Ambient Scribe", "Ambient Clinical Documentation", "Retrieval-Augmented Generation", "Backend Infrastructure", "Machine Learning", "System Design"], "worksFor": {"@type": "Organization", "name": "Marvix AI", "url": "https://marvix.ai"}}, "datePublished": "2024-12-01", "image": "https://karanjakhar.net/assets/hero/background.jpg"}</script>
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+  <link rel="icon" href="/favicon.ico" sizes="48x48">
+  <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png">
+  <link rel="alternate" type="application/rss+xml" title="Karan Jakhar Feed" href="/feed.xml">
+  <link rel="stylesheet" href="/static/style.css" data-frontend-css>
+  <link rel="stylesheet" href="/static/pygments.css" data-frontend-css>
+  <link rel="stylesheet" href="/static/frontend-off.css" data-frontend-off-css disabled>
+  <script>
+    try {
+      if (localStorage.getItem("karan-frontend-off") === "1") {
+        document.querySelectorAll("[data-frontend-css]").forEach(function (link) {
+          link.disabled = true;
+        });
+        document.querySelectorAll("[data-frontend-off-css]").forEach(function (link) {
+          link.disabled = false;
+        });
+      }
+    } catch (e) {}
+  </script>
+</head>
+<body class="blog-post-page">
+  <div class="site-shell">
+    <header class="site-header">
+      <div class="container">
+        <a class="brand" href="/">Karan Jakhar</a>
+        <nav class="site-nav" aria-label="Primary">
+            <a
+              href="/"
+            >Home</a>
+            <a
+              href="/#about"
+            >About</a>
+            <a
+              href="/#contact"
+            >Contact</a>
+            <a
+              href="/blog/"
+            >Blog</a>
+            <a
+              href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp"
+target="_blank" rel="noreferrer"            >Resume</a>
+        </nav>
+        <div class="header-controls">
+          <button type="button" id="frontend-toggle" class="frontend-toggle" aria-pressed="false">frontend off</button>
+          <button type="button" id="void-toggle" class="void-toggle" aria-label="Darker mode">darker</button>
+        </div>
+      </div>
+    </header>
+
+    <main>
+  <article class="section article-shell">
+    <div class="container narrow">
+      <p class="section-label"><a class="text-link" href="/blog/">Back to blog</a></p>
+      <header class="article-header">
+<p class="tag-row"><span class="tag tag-category">Work</span></p>        <h1>synopso: A Daily AI Paper Briefing, Built as a Pipeline</h1>
+        <p class="post-meta">December 1, 2024 · 4 min read</p>
+        <p class="content-audit">Words: 694 · Decorative elements required to understand this: 0</p>
+          <p class="tag-row">
+              <span class="tag">LLMs</span>
+              <span class="tag">Pipelines</span>
+              <span class="tag">Automation</span>
+          </p>
+      </header>
+      <div class="article-body"><h1 id="synopso">synopso</h1>
+<p><strong>synopso</strong> is a pipeline I built to solve a specific kind of fatigue: the feeling of perpetually falling behind on AI research. Not because papers aren&rsquo;t interesting — they are — but because there are too many of them and no clean way to triage. synopso runs daily, scrapes HuggingFace&rsquo;s trending papers page, downloads and reads each PDF, summarizes the work using an LLM, and pushes a structured briefing to a Telegram channel. By the time I make coffee, the relevant papers from the day before are already waiting.</p>
+<ul>
+<li><strong>Code:</strong> <a href="https://github.com/karanjakhar7/synopso">github.com/karanjakhar7/synopso</a></li>
+</ul>
+<h2 id="start-downstream-of-the-firehose">Start downstream of the firehose</h2>
+<p>The first design decision was where to get papers from. ArXiv publishes hundreds of papers a day across cs.AI, cs.LG, cs.CL, and related categories. Ingesting all of them and then filtering is a tractable problem, but it&rsquo;s the wrong problem — most of those papers don&rsquo;t matter to most people.</p>
+<p>HuggingFace&rsquo;s papers page is a better signal. It surfaces papers that researchers are actively bookmarking and discussing, which means the community has already done the first pass. synopso begins there: scrape the page for ArXiv IDs, fetch titles and authors directly from each paper&rsquo;s ArXiv HTML, then download the PDFs in parallel. The source isn&rsquo;t raw volume — it&rsquo;s the subset that&rsquo;s already earned attention.</p>
+<h2 id="two-concurrency-models-each-in-its-right-place">Two concurrency models, each in its right place</h2>
+<p>The download and summarization stages both want concurrency, but for different reasons, and the wrong model makes things slower, not faster.</p>
+<p>PDF downloads are blocking HTTP requests. <code>asyncio</code> is the wrong tool there — it can&rsquo;t actually parallelize synchronous I/O, it just interleaves waits. Instead, a <code>ThreadPoolExecutor</code> with eight workers downloads all PDFs truly in parallel. Each thread blocks independently; no one waits for the others.</p>
+<p>Summarization flips the picture. LLM API calls are async-native, and running them with threads would mean spinning up a thread per request and blocking on a coroutine — wasteful. Here, <code>asyncio.gather</code> fans out five papers concurrently, each awaiting its LLM response. Batch size of five is a deliberate pact with the rate limit: fast enough to finish a full day&rsquo;s papers quickly, conservative enough to stay inside per-minute quotas without special-casing anything.</p>
+<p>The rule I ended up with: thread pools for blocking I/O, async for I/O-bound coroutines. Mixing them is where things get slow.</p>
+<h2 id="the-llm-as-a-one-job-contractor">The LLM as a one-job contractor</h2>
+<p>The summarization step is intentionally narrow. The model receives a paper&rsquo;s title, authors, and full extracted text, and it returns a summary. That&rsquo;s it. It doesn&rsquo;t decide which papers are important (the HuggingFace signal does that), it doesn&rsquo;t format the Telegram message (the delivery layer does that), and it doesn&rsquo;t retry its own failures (the router does that). Giving the model a single, well-defined job keeps the prompt stable and makes failures easy to diagnose — a bad summary means a bad paper or a bad prompt, not an entangled failure across multiple responsibilities.</p>
+<p>LiteLLM handles the provider side. The model is a single environment variable — <code>gemini/gemini-3.1-flash-lite</code> today, something else tomorrow, no code change required. The router also manages retries and optional RPM/TPM ceilings, so the rate-limit contract from the download stage holds through summarization too.</p>
+<h2 id="the-stack">The stack</h2>
+<p>Python 3.12, <code>asyncio</code> and <code>ThreadPoolExecutor</code> for the two concurrency layers, <a href="https://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a> for scraping HuggingFace and ArXiv HTML, <a href="https://pypdf.readthedocs.io/">PyPDF</a> for text extraction, <a href="https://docs.litellm.ai/">LiteLLM</a> for model routing and retries, and <a href="https://python-telegram-bot.org/">python-telegram-bot</a> for delivery. No database — papers live in a local directory per run, and output is ephemeral by design. Deployment is a single GitHub Actions workflow: a <code>schedule: cron</code> trigger, API keys stored as repository secrets, and <code>uv run python -m core.main</code>. The pipeline runs in a few minutes and sits comfortably inside the free tier — zero infrastructure, zero maintenance.</p>
+<hr>
+<p><em>If you&rsquo;re building research tooling or personal automation pipelines on top of LLMs, I&rsquo;d enjoy comparing notes — <a href="/#contact">reach out</a>.</em></p></div>
+      <div class="contact-panel article-cta">
+        <div class="contact-copy">
+          <p class="section-label">Let's talk</p>
+          <h2>Building something at the edge of AI?</h2>
+        </div>
+        <div class="contact-actions">
+            <a class="button button-secondary-light" href="mailto:kjakhar4321@gmail.com">Email me</a>
+            <a class="button button-secondary-light" href="https://www.linkedin.com/in/karanjakhar7" rel="noreferrer" target="_blank">LinkedIn</a>
+        </div>
+      </div>
+    </div>
+  </article>
+    </main>
+
+    <footer class="site-footer">
+      <div class="container footer-grid">
+        <div>
+          <p class="footer-title">Karan Jakhar</p>
+          <p class="footer-copy">Writing about technology, systems, and ideas.</p>
+        </div>
+        <div class="footer-links">
+          <a href="https://www.github.com/karanjakhar7" rel="noreferrer">GitHub</a>
+          <a href="https://www.linkedin.com/in/karanjakhar7" rel="noreferrer">LinkedIn</a>
+            <a href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp" rel="noreferrer" target="_blank">Resume</a>
+            <a href="mailto:kjakhar4321@gmail.com">Email</a>
+          <a href="/fuck-the-frontend/">Manifesto</a>
+          <a href="/feed.xml">RSS</a>
+        </div>
+      </div>
+      <div class="container footer-bottom">
+        <p>&copy; 2026 Karan Jakhar</p>
+      </div>
+    </footer>
+  </div>
+  <script src="/static/hero-constellation.js" defer></script>
+  <script src="/static/contact-net.js" defer></script>
+  <script>
+    (function () {
+      var key = "karan-frontend-off";
+      var button = document.getElementById("frontend-toggle");
+      var frontendCss = document.querySelectorAll("[data-frontend-css]");
+      var frontendOffCss = document.querySelectorAll("[data-frontend-off-css]");
+      function isFrontendOff() {
+        return Array.prototype.some.call(frontendCss, function (link) { return link.disabled; });
+      }
+      function setFrontendOff(on) {
+        frontendCss.forEach(function (link) { link.disabled = on; });
+        frontendOffCss.forEach(function (link) { link.disabled = !on; });
+        requestAnimationFrame(function () { window.dispatchEvent(new Event("resize")); });
+        if (button) {
+          button.setAttribute("aria-pressed", on ? "true" : "false");
+          button.textContent = on ? "frontend on" : "frontend off";
+        }
+        try { localStorage.setItem(key, on ? "1" : "0"); } catch (e) {}
+      }
+      try {
+        if (localStorage.getItem(key) === "1") setFrontendOff(true);
+      } catch (e) {}
+      if (button) {
+        button.addEventListener("click", function () {
+          setFrontendOff(!isFrontendOff());
+        });
+      }
+      window.addEventListener("keydown", function (event) {
+        if (event.key !== "f" && event.key !== "F") return;
+        if (event.target.matches && event.target.matches("input, textarea, select")) return;
+        setFrontendOff(!isFrontendOff());
+      });
+    })();
+  </script>
+</body>
+</html>

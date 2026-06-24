@@ -4,12 +4,40 @@
     <title>Karan Jakhar</title>
     <link>https://karanjakhar.net</link>
     <description>I am an engineer working at the intersection of AI systems and real-world applications.</description>
-    <lastBuildDate>Wed, 24 Jun 2026 00:00:00 -0000</lastBuildDate>
+    <lastBuildDate>Thu, 25 Jun 2026 00:00:00 -0000</lastBuildDate>
+  <item>
+    <title>karenizer: I Spent a Weekend Teaching an LLM to Be Unreasonable</title>
+    <link>https://karanjakhar.net/blog/karenizer-i-spent-a-weekend-teaching-an-llm-to-be-unreasonable/</link>
+    <guid>https://karanjakhar.net/blog/karenizer-i-spent-a-weekend-teaching-an-llm-to-be-unreasonable/</guid>
+    <pubDate>Thu, 25 Jun 2026 00:00:00 -0000</pubDate>
+    <description>A web app that turns your boring complaints into increasingly unhinged Karen-level letters — because sometimes the cold, factual version just doesn&#x27;t capture how you truly feel about a lukewarm latte.</description>
+    <content:encoded><![CDATA[<h1 id="karenizer">karenizer</h1>
+<p><strong>karenizer</strong> is a web app that takes your ordinary grievance — the wrong order, the rude rep, the package that arrived looking like it was delivered by a trebuchet — and transforms it into a full-throated, theatrically escalating complaint letter. You pick how unhinged you want it: from &ldquo;Politely Disappointed&rdquo; (a calm adult) all the way to &ldquo;PEAK KAREN&rdquo; (an entity addressing the CEO of a coffee chain as though they personally wronged the founding fathers). It is a deeply silly project. I am not sorry.</p>
+<ul>
+<li><strong>Live demo:</strong> <a href="https://karenizer.vercel.app">karenizer.vercel.app</a></li>
+<li><strong>Code:</strong> <a href="https://github.com/karanjakhar7/karenizer">github.com/karanjakhar7/karenizer</a></li>
+</ul>
+<h2 id="the-whole-thing-is-a-prompt-engineering-exercise-dressed-as-a-joke">The whole thing is a prompt engineering exercise dressed as a joke</h2>
+<p>There are six Karen levels. Each one is a distinct system prompt, hand-tuned until it hit the right note. Level 0 is professional and measured. Level 3 has the LLM demand a manager, threaten Yelp, and deploy strategic capital letters FOR EMPHASIS. Level 5 — Peak Karen — instructs the model to invoke &ldquo;the spirit of every wronged customer in history&rdquo; and implies the grievance will be discussed on national television.</p>
+<p>Writing six system prompts that produce reliably <em>different</em> tones without bleeding into each other is actually non-trivial. Level 2 needs to feel annoyed-but-controlled; Level 3 needs the switch to have flipped but not melted. Getting that gradient right meant a lot of test complaints about cold soup. Science demands sacrifice.</p>
+<p>The intensity scale isn&rsquo;t cosmetic — it&rsquo;s the product. The same &ldquo;my pizza was cold&rdquo; turns into a completely different artifact at each level, and watching the tone shift is what makes it funny. The UI has a slider with an emoji that updates as you drag, because if you&rsquo;re building something this ridiculous, the feedback loop should be immediate.</p>
+<h2 id="the-model-does-drama-the-code-does-nothing-interesting">The model does drama. The code does nothing interesting.</h2>
+<p>There&rsquo;s no ranking, no scoring, no multi-stage pipeline here. This is one API call, which is actually the correct choice. The job is purely expressive: take a description and produce theatrical text. There&rsquo;s no deterministic logic to offload, no place where code is more reliable than the model.</p>
+<p>What the code <em>does</em> handle: building the user prompt from the form fields (company name, category, the specific grievance), picking the right system prompt from a dictionary keyed by level, and validating the request so nobody submits a 10,000-character rant that costs me real money. Pydantic handles the typing. FastAPI handles the routing. LiteLLM handles talking to whatever model is configured via environment variable — I ran on Claude during development and swapped to another provider for deployment with a one-line change. That abstraction earns its keep on a project like this where the model is literally the entire product.</p>
+<p>Temperature is <code>0.85</code>. High enough that two identical complaints generate meaningfully different letters; low enough that Level 5 doesn&rsquo;t veer into actual gibberish. It took about four tries to land on that number, which I mention only because &ldquo;tune your temperature&rdquo; is advice that sounds obvious until you&rsquo;re reading output that&rsquo;s either too stiff or has started making up legal citations.</p>
+<h2 id="no-framework-no-database-no-problem">No framework, no database, no problem</h2>
+<p>The frontend is vanilla HTML, CSS, and about a hundred lines of JavaScript. No React. No build step. No <code>node_modules</code> folder to make the repo feel heavy. A form submits to <code>/api/generate</code>, a hidden div swaps in with the result, a button copies it to clipboard. That&rsquo;s the whole interaction.</p>
+<p>This was deliberate. When the entire product is one API call and one text box, a frontend framework is a solution looking for a problem. The constraint of &ldquo;no framework&rdquo; also made deployment on Vercel&rsquo;s Python runtime almost trivially easy — there&rsquo;s no build pipeline to configure, just a FastAPI app with an <code>api/index.py</code> entry point and a twelve-line <code>vercel.json</code>.</p>
+<h2 id="the-stack">The stack</h2>
+<p>Python 3.12, <a href="https://fastapi.tiangolo.com/">FastAPI</a> for the API and Jinja2 templating, <a href="https://docs.litellm.ai/">LiteLLM</a> for model routing, <a href="https://docs.pydantic.dev/">Pydantic v2</a> for request validation, and plain HTML/CSS/JS for the UI. Deployed on Vercel. Three runtime dependencies. No database — there&rsquo;s nothing to persist; the letter exists, you copy it, it&rsquo;s gone. I like systems with no state to corrupt.</p>
+<hr>
+<p><em>If you&rsquo;ve built something equally useless but technically honest, I&rsquo;d enjoy hearing about it — <a href="/#contact">reach out</a>.</em></p>]]></content:encoded>
+  </item>
   <item>
     <title>adgen: From a One-Line Brief to a Ranked Ad Campaign</title>
     <link>https://karanjakhar.net/blog/adgen/</link>
     <guid>https://karanjakhar.net/blog/adgen/</guid>
-    <pubDate>Wed, 24 Jun 2026 00:00:00 -0000</pubDate>
+    <pubDate>Mon, 15 Jun 2026 00:00:00 -0000</pubDate>
     <description>A system I built that turns a one-sentence business description into ranked publisher recommendations, persona-tuned ad creative, and a structured campaign config — and is honest enough to recommend nothing when the fit isn&#x27;t there.</description>
     <content:encoded><![CDATA[<h1 id="adgen">adgen</h1>
 <p><strong>adgen</strong> is a system I built that takes a single sentence about a business — <em>&ldquo;We sell premium dog food for senior dogs, for owners who care about joint health&rdquo;</em> — and turns it into a working ad campaign: a ranked list of publishers to run on, three to five ad variants written for specific audience personas, and a structured campaign config with budget allocation, targeting, and bid strategy.</p>
@@ -101,6 +129,33 @@
 <h2 id="conclusion">Conclusion</h2>
 <p>True sacrifice isn&rsquo;t about deprivation for its own sake. It&rsquo;s about giving up something lesser to gain something greater. Stop mimicking your idols&rsquo; sacrifices without understanding their goals. Find your own purpose, and let your sacrifices stem from that. Only then will they have meaning-and only then will you avoid the loneliness and regret of empty sacrifices.</p>
 <p>Work hard and enjoy the limited time you have. Take a chill pill.</p>]]></content:encoded>
+  </item>
+  <item>
+    <title>synopso: A Daily AI Paper Briefing, Built as a Pipeline</title>
+    <link>https://karanjakhar.net/blog/synopso/</link>
+    <guid>https://karanjakhar.net/blog/synopso/</guid>
+    <pubDate>Sun, 01 Dec 2024 00:00:00 -0000</pubDate>
+    <description>A pipeline I built that wakes up each morning, finds the day&#x27;s most-discussed AI papers on HuggingFace, downloads and reads them, and delivers a Telegram briefing — without me lifting a finger.</description>
+    <content:encoded><![CDATA[<h1 id="synopso">synopso</h1>
+<p><strong>synopso</strong> is a pipeline I built to solve a specific kind of fatigue: the feeling of perpetually falling behind on AI research. Not because papers aren&rsquo;t interesting — they are — but because there are too many of them and no clean way to triage. synopso runs daily, scrapes HuggingFace&rsquo;s trending papers page, downloads and reads each PDF, summarizes the work using an LLM, and pushes a structured briefing to a Telegram channel. By the time I make coffee, the relevant papers from the day before are already waiting.</p>
+<ul>
+<li><strong>Code:</strong> <a href="https://github.com/karanjakhar7/synopso">github.com/karanjakhar7/synopso</a></li>
+</ul>
+<h2 id="start-downstream-of-the-firehose">Start downstream of the firehose</h2>
+<p>The first design decision was where to get papers from. ArXiv publishes hundreds of papers a day across cs.AI, cs.LG, cs.CL, and related categories. Ingesting all of them and then filtering is a tractable problem, but it&rsquo;s the wrong problem — most of those papers don&rsquo;t matter to most people.</p>
+<p>HuggingFace&rsquo;s papers page is a better signal. It surfaces papers that researchers are actively bookmarking and discussing, which means the community has already done the first pass. synopso begins there: scrape the page for ArXiv IDs, fetch titles and authors directly from each paper&rsquo;s ArXiv HTML, then download the PDFs in parallel. The source isn&rsquo;t raw volume — it&rsquo;s the subset that&rsquo;s already earned attention.</p>
+<h2 id="two-concurrency-models-each-in-its-right-place">Two concurrency models, each in its right place</h2>
+<p>The download and summarization stages both want concurrency, but for different reasons, and the wrong model makes things slower, not faster.</p>
+<p>PDF downloads are blocking HTTP requests. <code>asyncio</code> is the wrong tool there — it can&rsquo;t actually parallelize synchronous I/O, it just interleaves waits. Instead, a <code>ThreadPoolExecutor</code> with eight workers downloads all PDFs truly in parallel. Each thread blocks independently; no one waits for the others.</p>
+<p>Summarization flips the picture. LLM API calls are async-native, and running them with threads would mean spinning up a thread per request and blocking on a coroutine — wasteful. Here, <code>asyncio.gather</code> fans out five papers concurrently, each awaiting its LLM response. Batch size of five is a deliberate pact with the rate limit: fast enough to finish a full day&rsquo;s papers quickly, conservative enough to stay inside per-minute quotas without special-casing anything.</p>
+<p>The rule I ended up with: thread pools for blocking I/O, async for I/O-bound coroutines. Mixing them is where things get slow.</p>
+<h2 id="the-llm-as-a-one-job-contractor">The LLM as a one-job contractor</h2>
+<p>The summarization step is intentionally narrow. The model receives a paper&rsquo;s title, authors, and full extracted text, and it returns a summary. That&rsquo;s it. It doesn&rsquo;t decide which papers are important (the HuggingFace signal does that), it doesn&rsquo;t format the Telegram message (the delivery layer does that), and it doesn&rsquo;t retry its own failures (the router does that). Giving the model a single, well-defined job keeps the prompt stable and makes failures easy to diagnose — a bad summary means a bad paper or a bad prompt, not an entangled failure across multiple responsibilities.</p>
+<p>LiteLLM handles the provider side. The model is a single environment variable — <code>gemini/gemini-3.1-flash-lite</code> today, something else tomorrow, no code change required. The router also manages retries and optional RPM/TPM ceilings, so the rate-limit contract from the download stage holds through summarization too.</p>
+<h2 id="the-stack">The stack</h2>
+<p>Python 3.12, <code>asyncio</code> and <code>ThreadPoolExecutor</code> for the two concurrency layers, <a href="https://www.crummy.com/software/BeautifulSoup/">BeautifulSoup</a> for scraping HuggingFace and ArXiv HTML, <a href="https://pypdf.readthedocs.io/">PyPDF</a> for text extraction, <a href="https://docs.litellm.ai/">LiteLLM</a> for model routing and retries, and <a href="https://python-telegram-bot.org/">python-telegram-bot</a> for delivery. No database — papers live in a local directory per run, and output is ephemeral by design. Deployment is a single GitHub Actions workflow: a <code>schedule: cron</code> trigger, API keys stored as repository secrets, and <code>uv run python -m core.main</code>. The pipeline runs in a few minutes and sits comfortably inside the free tier — zero infrastructure, zero maintenance.</p>
+<hr>
+<p><em>If you&rsquo;re building research tooling or personal automation pipelines on top of LLMs, I&rsquo;d enjoy comparing notes — <a href="/#contact">reach out</a>.</em></p>]]></content:encoded>
   </item>
   <item>
     <title>Marvix AI: Building an Ambient Scribe from Scratch</title>
