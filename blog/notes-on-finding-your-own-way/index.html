@@ -26,14 +26,23 @@
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="Karan Jakhar Feed" href="/feed.xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
-  <link rel="stylesheet" href="/static/style.css">
-  <link rel="stylesheet" href="/static/pygments.css">
+  <link rel="stylesheet" href="/static/style.css" data-frontend-css>
+  <link rel="stylesheet" href="/static/pygments.css" data-frontend-css>
+  <link rel="stylesheet" href="/static/frontend-off.css" data-frontend-off-css disabled>
+  <script>
+    try {
+      if (localStorage.getItem("karan-frontend-off") === "1") {
+        document.querySelectorAll("[data-frontend-css]").forEach(function (link) {
+          link.disabled = true;
+        });
+        document.querySelectorAll("[data-frontend-off-css]").forEach(function (link) {
+          link.disabled = false;
+        });
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body class="blog-post-page">
-  <canvas id="site-bg" aria-hidden="true"></canvas>
   <div class="site-shell">
     <header class="site-header">
       <div class="container">
@@ -55,6 +64,7 @@
               href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp"
 target="_blank" rel="noreferrer"            >Resume</a>
         </nav>
+        <button type="button" id="frontend-toggle" class="frontend-toggle" aria-pressed="false">frontend off</button>
         <button type="button" id="void-toggle" class="void-toggle" aria-label="Darker mode">darker</button>
       </div>
     </header>
@@ -66,6 +76,7 @@ target="_blank" rel="noreferrer"            >Resume</a>
       <header class="article-header">
 <p class="tag-row"><span class="tag tag-category">Notions</span></p>        <h1>Notes on Finding Your Own Way</h1>
         <p class="post-meta">June 14, 2026 · 3 min read</p>
+        <p class="content-audit">Words: 572 · Decorative elements required to understand this: 0</p>
           <p class="tag-row">
               <span class="tag">Meaning</span>
               <span class="tag">Contentment</span>
@@ -122,6 +133,7 @@ target="_blank" rel="noreferrer"            >Resume</a>
           <a href="https://www.linkedin.com/in/karanjakhar7" rel="noreferrer">LinkedIn</a>
             <a href="https://drive.google.com/file/d/1EG6JURb2-vgF0dbtkOVAtxGb1j3czvfp" rel="noreferrer" target="_blank">Resume</a>
             <a href="mailto:kjakhar4321@gmail.com">Email</a>
+          <a href="/fuck-the-frontend/">Manifesto</a>
           <a href="/feed.xml">RSS</a>
         </div>
       </div>
@@ -132,5 +144,39 @@ target="_blank" rel="noreferrer"            >Resume</a>
   </div>
   <script src="/static/hero-constellation.js" defer></script>
   <script src="/static/contact-net.js" defer></script>
+  <script>
+    (function () {
+      var key = "karan-frontend-off";
+      var button = document.getElementById("frontend-toggle");
+      var frontendCss = document.querySelectorAll("[data-frontend-css]");
+      var frontendOffCss = document.querySelectorAll("[data-frontend-off-css]");
+      function isFrontendOff() {
+        return Array.prototype.some.call(frontendCss, function (link) { return link.disabled; });
+      }
+      function setFrontendOff(on) {
+        frontendCss.forEach(function (link) { link.disabled = on; });
+        frontendOffCss.forEach(function (link) { link.disabled = !on; });
+        requestAnimationFrame(function () { window.dispatchEvent(new Event("resize")); });
+        if (button) {
+          button.setAttribute("aria-pressed", on ? "true" : "false");
+          button.textContent = on ? "frontend on" : "frontend off";
+        }
+        try { localStorage.setItem(key, on ? "1" : "0"); } catch (e) {}
+      }
+      try {
+        if (localStorage.getItem(key) === "1") setFrontendOff(true);
+      } catch (e) {}
+      if (button) {
+        button.addEventListener("click", function () {
+          setFrontendOff(!isFrontendOff());
+        });
+      }
+      window.addEventListener("keydown", function (event) {
+        if (event.key !== "f" && event.key !== "F") return;
+        if (event.target.matches && event.target.matches("input, textarea, select")) return;
+        setFrontendOff(!isFrontendOff());
+      });
+    })();
+  </script>
 </body>
 </html>

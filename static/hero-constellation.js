@@ -24,7 +24,7 @@
   var angleY = 0, angleX = 0;
   var parX = 0, parY = 0, parTX = 0, parTY = 0; // parallax tilt (current + target)
   var mouseX = 0, mouseY = 0, hasMouse = false;
-  var running = false, rafId = 0, inView = true;
+  var running = false, rafId = 0;
 
   function build() {
     var rect = canvas.getBoundingClientRect();
@@ -34,6 +34,11 @@
     canvas.width = Math.round(W * dpr);
     canvas.height = Math.round(H * dpr);
     ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    if (!W || !H) {
+      points = [];
+      parX = parY = parTX = parTY = 0;
+      return;
+    }
 
     // count scales with area, capped; ~90 on a wide hero, ~45 on a narrow one
     var n = Math.round(Math.min(90, Math.max(40, (W * H) / 11000)));
@@ -174,7 +179,7 @@
   }
 
   function start() {
-    if (running || reduce || !inView || document.hidden) return;
+    if (running || reduce || document.hidden) return;
     running = true;
     rafId = requestAnimationFrame(tick);
   }
@@ -196,7 +201,7 @@
     clearTimeout(resizeTimer);
     resizeTimer = setTimeout(function () {
       build();
-      if (reduce) draw();
+      if (reduce) draw(); else start();
     }, 200);
   }
   window.addEventListener("resize", scheduleRebuild);
@@ -214,6 +219,7 @@
 
   if (!reduce) {
     window.addEventListener("mousemove", function (e) {
+      if (!W || !H) return;
       mouseX = e.clientX;
       mouseY = e.clientY;
       hasMouse = true;
@@ -223,13 +229,6 @@
     window.addEventListener("mouseout", function (e) {
       if (!e.relatedTarget) { hasMouse = false; parTX = 0; parTY = 0; }
     });
-  }
-
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (entries) {
-      inView = entries[0].isIntersecting;
-      if (inView) start(); else stop();
-    }).observe(canvas);
   }
 
   // egg #2: konami code -> the constellation goes supernova, then re-forms.
