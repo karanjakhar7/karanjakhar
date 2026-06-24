@@ -3,9 +3,9 @@
   --radius-sm: 8px;
   --container: 1200px;
   --container-narrow: 760px;
-  --sans: 'Inter', ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --sans: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   --serif: var(--sans);
-  --mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
+  --mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 html {
@@ -438,6 +438,13 @@ a.post-card:hover {
   letter-spacing: -0.011em;
 }
 
+.content-audit {
+  margin: 0.6rem 0 0;
+  font-family: var(--mono);
+  font-size: 0.78rem;
+  color: var(--accent-warm);
+}
+
 .tag {
   display: inline-flex;
   align-items: center;
@@ -603,6 +610,25 @@ a.post-card:hover {
 
 .footer-bottom {
   padding-top: 0.5rem;
+}
+
+.plain-toggle {
+  margin-left: 0.75rem;
+  background: transparent;
+  border: 1px solid var(--accent-quote);
+  border-radius: var(--radius-sm);
+  padding: 0.3rem 0.55rem;
+  cursor: pointer;
+  font-family: var(--mono);
+  font-size: 0.72rem;
+  color: var(--ink-soft);
+  transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease;
+}
+
+.plain-toggle:hover,
+.plain-toggle[aria-pressed="true"] {
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
 /* egg #1: "darker" — tucked in the top-right corner, set apart from the nav
@@ -774,6 +800,10 @@ a.post-card:hover {
     top: 1.4rem;
     right: 0;
     margin: 0;
+  }
+
+  .plain-toggle {
+    margin-left: 0;
   }
 }
 

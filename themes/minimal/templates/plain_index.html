@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block content %}
+  <section class="section article-shell">
+    <div class="container narrow">
+      <header class="article-header">
+        <p class="section-label">Frontend removed</p>
+        <h1>Writing archive</h1>
+        <p class="lede">Same writing, fewer decorations. The sentence ships first.</p>
+      </header>
+
+      <ol class="article-body">
+        {% for post in posts %}
+          <li>
+            <time datetime="{{ post.date_value.isoformat() if post.date_value else '' }}">{{ post.date_display }}</time>
+            <a href="{{ post.url }}">{{ post.title }}</a>
+            <span>{{ post.word_count }} words</span>
+          </li>
+        {% endfor %}
+      </ol>
+    </div>
+  </section>
+{% endblock %}

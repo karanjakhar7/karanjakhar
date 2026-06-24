@@ -39,11 +39,21 @@
   <link rel="icon" href="/favicon-32.png" type="image/png" sizes="32x32">
   <link rel="apple-touch-icon" href="/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }} Feed" href="/feed.xml">
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=JetBrains+Mono:wght@400&display=swap">
-  <link rel="stylesheet" href="/static/style.css">
-  <link rel="stylesheet" href="/static/pygments.css">
+  <link rel="stylesheet" href="/static/style.css" data-frontend-css>
+  <link rel="stylesheet" href="/static/pygments.css" data-frontend-css>
+  <link rel="stylesheet" href="/static/plain.css" data-plain-css disabled>
+  <script>
+    try {
+      if (localStorage.getItem("karan-frontend-off") === "1") {
+        document.querySelectorAll("[data-frontend-css]").forEach(function (link) {
+          link.disabled = true;
+        });
+        document.querySelectorAll("[data-plain-css]").forEach(function (link) {
+          link.disabled = false;
+        });
+      }
+    } catch (e) {}
+  </script>
 </head>
 <body class="{{ body_class }}">
   <canvas id="site-bg" aria-hidden="true"></canvas>
@@ -59,7 +69,9 @@
               {% if active_url == item.url %}aria-current="page"{% endif %}
             >{{ item.title }}</a>
           {% endfor %}
+          <a href="/plain/" {% if active_url == "/plain/" %}aria-current="page"{% endif %}>Plain</a>
         </nav>
+        <button type="button" id="plain-toggle" class="plain-toggle" aria-pressed="false">frontend off</button>
         <button type="button" id="void-toggle" class="void-toggle" aria-label="Darker mode">darker</button>
       </div>
     </header>
@@ -86,6 +98,7 @@
           {% if contact.email %}
             <a href="mailto:{{ contact.email }}">Email</a>
           {% endif %}
+          <a href="/fuck-the-frontend/">Manifesto</a>
           <a href="/feed.xml">RSS</a>
         </div>
       </div>
@@ -96,5 +109,40 @@
   </div>
   <script src="/static/hero-constellation.js" defer></script>
   <script src="/static/contact-net.js" defer></script>
+  <script>
+    (function () {
+      var key = "karan-frontend-off";
+      var button = document.getElementById("plain-toggle");
+      var hiddenWhenPlain = document.querySelectorAll("#site-bg, .contact-net-canvas");
+      var frontendCss = document.querySelectorAll("[data-frontend-css]");
+      var plainCss = document.querySelectorAll("[data-plain-css]");
+      function isPlain() {
+        return Array.prototype.some.call(frontendCss, function (link) { return link.disabled; });
+      }
+      function setPlain(on) {
+        frontendCss.forEach(function (link) { link.disabled = on; });
+        plainCss.forEach(function (link) { link.disabled = !on; });
+        hiddenWhenPlain.forEach(function (el) { el.hidden = on; });
+        if (button) {
+          button.setAttribute("aria-pressed", on ? "true" : "false");
+          button.textContent = on ? "frontend on" : "frontend off";
+        }
+        try { localStorage.setItem(key, on ? "1" : "0"); } catch (e) {}
+      }
+      try {
+        if (localStorage.getItem(key) === "1") setPlain(true);
+      } catch (e) {}
+      if (button) {
+        button.addEventListener("click", function () {
+          setPlain(!isPlain());
+        });
+      }
+      window.addEventListener("keydown", function (event) {
+        if (event.key !== "f" && event.key !== "F") return;
+        if (event.target.matches && event.target.matches("input, textarea, select")) return;
+        setPlain(!isPlain());
+      });
+    })();
+  </script>
 </body>
 </html>

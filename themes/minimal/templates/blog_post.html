@@ -8,6 +8,7 @@
         {% if post.category %}<p class="tag-row"><span class="tag tag-category">{{ post.category }}</span></p>{% endif %}
         <h1>{{ post.title }}</h1>
         <p class="post-meta">{{ post.date_display }} · {{ post.reading_time }} min read</p>
+        <p class="content-audit">Words: {{ post.word_count }} · Decorative elements required to understand this: 0</p>
         {% if post.tags %}
           <p class="tag-row">
             {% for tag in post.tags %}
