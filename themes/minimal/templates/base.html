@@ -41,14 +41,14 @@
   <link rel="alternate" type="application/rss+xml" title="{{ site.title }} Feed" href="/feed.xml">
   <link rel="stylesheet" href="/static/style.css" data-frontend-css>
   <link rel="stylesheet" href="/static/pygments.css" data-frontend-css>
-  <link rel="stylesheet" href="/static/plain.css" data-plain-css disabled>
+  <link rel="stylesheet" href="/static/frontend-off.css" data-frontend-off-css disabled>
   <script>
     try {
       if (localStorage.getItem("karan-frontend-off") === "1") {
         document.querySelectorAll("[data-frontend-css]").forEach(function (link) {
           link.disabled = true;
         });
-        document.querySelectorAll("[data-plain-css]").forEach(function (link) {
+        document.querySelectorAll("[data-frontend-off-css]").forEach(function (link) {
           link.disabled = false;
         });
       }
@@ -56,7 +56,9 @@
   </script>
 </head>
 <body class="{{ body_class }}">
-  <canvas id="site-bg" aria-hidden="true"></canvas>
+  {% if body_class != "blog-post-page" %}
+    <canvas id="site-bg" aria-hidden="true"></canvas>
+  {% endif %}
   <div class="site-shell">
     <header class="site-header">
       <div class="container">
@@ -69,9 +71,8 @@
               {% if active_url == item.url %}aria-current="page"{% endif %}
             >{{ item.title }}</a>
           {% endfor %}
-          <a href="/plain/" {% if active_url == "/plain/" %}aria-current="page"{% endif %}>Plain</a>
         </nav>
-        <button type="button" id="plain-toggle" class="plain-toggle" aria-pressed="false">frontend off</button>
+        <button type="button" id="frontend-toggle" class="frontend-toggle" aria-pressed="false">frontend off</button>
         <button type="button" id="void-toggle" class="void-toggle" aria-label="Darker mode">darker</button>
       </div>
     </header>
@@ -112,17 +113,16 @@
   <script>
     (function () {
       var key = "karan-frontend-off";
-      var button = document.getElementById("plain-toggle");
-      var hiddenWhenPlain = document.querySelectorAll("#site-bg, .contact-net-canvas");
+      var button = document.getElementById("frontend-toggle");
       var frontendCss = document.querySelectorAll("[data-frontend-css]");
-      var plainCss = document.querySelectorAll("[data-plain-css]");
-      function isPlain() {
+      var frontendOffCss = document.querySelectorAll("[data-frontend-off-css]");
+      function isFrontendOff() {
         return Array.prototype.some.call(frontendCss, function (link) { return link.disabled; });
       }
-      function setPlain(on) {
+      function setFrontendOff(on) {
         frontendCss.forEach(function (link) { link.disabled = on; });
-        plainCss.forEach(function (link) { link.disabled = !on; });
-        hiddenWhenPlain.forEach(function (el) { el.hidden = on; });
+        frontendOffCss.forEach(function (link) { link.disabled = !on; });
+        requestAnimationFrame(function () { window.dispatchEvent(new Event("resize")); });
         if (button) {
           button.setAttribute("aria-pressed", on ? "true" : "false");
           button.textContent = on ? "frontend on" : "frontend off";
@@ -130,17 +130,17 @@
         try { localStorage.setItem(key, on ? "1" : "0"); } catch (e) {}
       }
       try {
-        if (localStorage.getItem(key) === "1") setPlain(true);
+        if (localStorage.getItem(key) === "1") setFrontendOff(true);
       } catch (e) {}
       if (button) {
         button.addEventListener("click", function () {
-          setPlain(!isPlain());
+          setFrontendOff(!isFrontendOff());
         });
       }
       window.addEventListener("keydown", function (event) {
         if (event.key !== "f" && event.key !== "F") return;
         if (event.target.matches && event.target.matches("input, textarea, select")) return;
-        setPlain(!isPlain());
+        setFrontendOff(!isFrontendOff());
       });
     })();
   </script>

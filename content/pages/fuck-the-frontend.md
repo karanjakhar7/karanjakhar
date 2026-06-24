@@ -14,7 +14,7 @@ Fancy frontend work is not evil. Sometimes it clarifies, compresses, guides, or 
 
 So this site keeps a small escape hatch: **frontend off**.
 
-Press `f`, use the Plain link, or read the archive at [/plain/](/plain/). The point should survive without the costume.
+Press `f` or use the toggle. The point should survive without the costume.
 
 Rules:
 

@@ -23,7 +23,7 @@
   var W = 0, H = 0, dpr = 1;
   var layers = [];  // layers[i] = [{x, baseY, phase}, ...]
   var edges = [];   // {a, b, off} where a/b are node refs, off staggers the pulse
-  var running = false, raf = 0, inView = true, t0 = 0;
+  var running = false, raf = 0, t0 = 0;
 
   function measure() {
     var r = box.getBoundingClientRect();
@@ -135,7 +135,7 @@
   }
 
   function start() {
-    if (running || reduce || !inView || document.hidden) return;
+    if (running || reduce || document.hidden) return;
     running = true; raf = requestAnimationFrame(step);
   }
   function stop() { running = false; if (raf) cancelAnimationFrame(raf); }
@@ -144,15 +144,10 @@
   if (reduce) draw(0); else start();
 
   var t;
-  function rebuild() { clearTimeout(t); t = setTimeout(function () { measure(); if (reduce) draw(0); }, 200); }
+  function rebuild() { clearTimeout(t); t = setTimeout(function () { measure(); if (reduce) draw(0); else start(); }, 200); }
   window.addEventListener("resize", rebuild);
   window.addEventListener("load", rebuild); // layout/fonts settle the box size
   document.addEventListener("visibilitychange", function () {
     if (document.hidden) stop(); else start();
   });
-  if ("IntersectionObserver" in window) {
-    new IntersectionObserver(function (ent) {
-      inView = ent[0].isIntersecting; if (inView) start(); else stop();
-    }).observe(canvas);
-  }
 })();

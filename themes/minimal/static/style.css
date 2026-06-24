@@ -117,13 +117,6 @@ img {
   padding: 3rem 0 1rem;
 }
 
-/* No animated background while reading — keep blog posts distraction-free.
-   The IntersectionObserver in hero-constellation.js stops the loop once the
-   canvas is hidden, so this also halts the render work. */
-.blog-post-page #site-bg {
-  display: none;
-}
-
 #site-bg {
   position: fixed;
   inset: 0;
@@ -612,7 +605,7 @@ a.post-card:hover {
   padding-top: 0.5rem;
 }
 
-.plain-toggle {
+.frontend-toggle {
   margin-left: 0.75rem;
   background: transparent;
   border: 1px solid var(--accent-quote);
@@ -625,8 +618,8 @@ a.post-card:hover {
   transition: border-color 180ms ease, color 180ms ease, background-color 180ms ease;
 }
 
-.plain-toggle:hover,
-.plain-toggle[aria-pressed="true"] {
+.frontend-toggle:hover,
+.frontend-toggle[aria-pressed="true"] {
   border-color: var(--accent);
   color: var(--accent);
 }
@@ -802,7 +795,7 @@ a.post-card:hover {
     margin: 0;
   }
 
-  .plain-toggle {
+  .frontend-toggle {
     margin-left: 0;
   }
 }

@@ -557,7 +557,7 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
     hero_image = str(config.get("hero", {}).get("image", "")).strip()
     default_image = f"{base_url}{hero_image}" if hero_image.startswith("/") else hero_image
     newest_date = posts[0].date_value.isoformat() if posts and posts[0].date_value else None
-    urls_for_sitemap: list[tuple[str, str | None]] = [("/", newest_date), ("/blog/", newest_date), ("/plain/", newest_date)]
+    urls_for_sitemap: list[tuple[str, str | None]] = [("/", newest_date), ("/blog/", newest_date)]
 
     for post in posts:
         meta = build_meta(config["site"], f"{post.title} | {config['site']['title']}", post.summary, post.url, default_image)
@@ -641,30 +641,6 @@ def render_site(config: dict[str, Any], posts: list[ContentItem], pages: list[Co
         og_image=blog_meta["og_image"],
         active_url="/blog/",
         body_class="blog-index-page",
-    )
-    rendered_files += 1
-
-    plain_meta = build_meta(
-        config["site"],
-        f"Writing Archive | {config['site']['title']}",
-        "The writing with the frontend turned off.",
-        "/plain/",
-        default_image,
-    )
-    render_template(
-        environment,
-        "plain_index.html",
-        output_dir / "plain/index.html",
-        **global_context,
-        page_title=plain_meta["title"],
-        page_description=plain_meta["description"],
-        canonical_url=plain_meta["canonical_url"],
-        og_title=plain_meta["og_title"],
-        og_description=plain_meta["og_description"],
-        og_url=plain_meta["og_url"],
-        og_image=plain_meta["og_image"],
-        active_url="/plain/",
-        body_class="plain-index-page",
     )
     rendered_files += 1
 
