@@ -89,7 +89,14 @@ img {
   font-size: 1.31rem;
   font-weight: 400;
   letter-spacing: -0.011em;
-  margin-right: auto; /* push nav + the darker egg to the right edge */
+  margin-right: auto; /* push nav + header controls to the right edge */
+}
+
+.header-controls {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-shrink: 0;
 }
 
 .site-nav {
@@ -610,7 +617,6 @@ a.post-card:hover {
 }
 
 .frontend-toggle {
-  margin-left: 0.75rem;
   background: transparent;
   border: 1px solid var(--accent-quote);
   border-radius: var(--radius-sm);
@@ -631,7 +637,6 @@ a.post-card:hover {
 /* egg #1: "darker" — tucked in the top-right corner, set apart from the nav
    so it doesn't read as a page. Dim and lowercase: a control, not a link. */
 .void-toggle {
-  margin-left: 1rem;
   background: none;
   border: 0;
   padding: 0;
@@ -786,21 +791,26 @@ a.post-card:hover {
   /* panel stacks on mobile — the net would be a tall empty block under the copy */
   .contact-net { display: none; }
 
-  /* header stacks (brand over nav) on mobile — pin the egg to the empty
-     top-right corner instead of letting it drop onto its own row */
+  /* header stacks (brand over nav) on mobile — pin utility controls to the
+     top-right corner so they stay out of the nav row */
   .site-header .container {
     position: relative;
   }
 
-  .void-toggle {
+  .brand {
+    padding-right: 9.5rem;
+  }
+
+  .header-controls {
     position: absolute;
     top: 1.4rem;
     right: 0;
-    margin: 0;
+    gap: 0.5rem;
   }
 
   .frontend-toggle {
-    margin-left: 0;
+    padding: 0.25rem 0.45rem;
+    font-size: 0.68rem;
   }
 }
 
